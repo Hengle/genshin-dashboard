@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchAchievements } from "@/api/database/achievement";
+import { fetchCharacters } from "@/api/database/avatar/character";
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {
-  res.status(200).json(await fetchAchievements());
+  res.status(200).json(await fetchCharacters());
 }

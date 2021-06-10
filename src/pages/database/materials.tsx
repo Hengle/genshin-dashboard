@@ -113,7 +113,7 @@ export const getStaticProps = async () => ({
       .filter((v) => v.type.length > 0)
       .map((v) => ({
         ...v,
-        key: v.name,
+        key: v.id,
       })),
   },
 });

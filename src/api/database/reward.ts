@@ -34,12 +34,12 @@ export async function fetchRewards(materials?: MaterialMap) {
       ...obj,
       [item.RewardId]: {
         id: item.RewardId,
-        items: item.RewardItemList.filter((v) => Object.keys(v).length > 0).map(
-          (v) => ({
+        items: item.RewardItemList.filter((v) => Object.keys(v).length > 0)
+          .map((v) => ({
             item: materialMap[v.ItemId],
             amount: v.ItemCount,
-          }),
-        ),
+          }))
+          .filter((v) => v.item),
       },
     }),
     {} as RewardMap,
