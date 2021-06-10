@@ -5,6 +5,7 @@ import {
   CharacterCurveMap,
   fetchAvatarCurve,
 } from "@/api/database/avatar/curve";
+import { fetchRewards, RewardData, RewardMap } from "@/api/database/reward";
 
 type CharacterMap = Record<number, CharacterData>;
 
@@ -21,6 +22,8 @@ type AvatarExcelConfigData = {
   DefenseBase: number;
   Id: number;
   NameTextMapHash: number;
+  AvatarPromoteRewardLevelList: number[];
+  AvatarPromoteRewardIdList: number[];
   PropGrowCurves: {
     Type: string;
     GrowCurve: string;
@@ -34,6 +37,9 @@ type CharacterData = {
   infoDescription: string;
   stars: number;
   bodyType: string;
+  ascension: {
+    rewards: AscensionRewards;
+  };
   stats: {
     base: {
       hp: number;
@@ -44,6 +50,10 @@ type CharacterData = {
   };
 };
 
+type AscensionRewards = {
+  [level: number]: RewardData;
+};
+
 type CurveInfo = {
   [type: string]: AvatarCurveInfo;
 };
@@ -52,9 +62,16 @@ type Curves = {
   [level: number]: CurveInfo;
 };
 
+// TODO:
+// * Avatar Promote ID
+// * Skill Depot ID
+// * InitialWeapon
+// * WeaponType
+// * StaminaRecoverSpeed
 export async function fetchCharacters(
   text?: TextMap,
   curves?: CharacterCurveMap,
+  reward?: RewardMap,
 ) {
   const data: AvatarExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AvatarExcelConfigData",
@@ -62,6 +79,7 @@ export async function fetchCharacters(
 
   const textMap = text ?? (await fetchTextMap());
   const curveMap = curves ?? (await fetchAvatarCurve());
+  const rewardMap = reward ?? (await fetchRewards());
 
   return data.reduce(
     (obj, item) => ({
@@ -91,6 +109,18 @@ export async function fetchCharacters(
               ),
             }),
             {} as Curves,
+          ),
+        },
+        ascension: {
+          rewards: item.AvatarPromoteRewardLevelList.map((v, index) => [
+            v,
+            item.AvatarPromoteRewardIdList[index],
+          ]).reduce(
+            (obj, [level, id]) => ({
+              ...obj,
+              [level]: rewardMap[id],
+            }),
+            {} as AscensionRewards,
           ),
         },
       },

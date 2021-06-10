@@ -123,6 +123,12 @@ export class ModularTable<RecordType extends object> extends React.Component<
         return { ...v, ...this.getColumnSearchProps(v) };
       }) ?? [];
 
-    return <Table {...this.props} columns={columns as never} />;
+    return (
+      <Table
+        {...this.props}
+        scroll={{ x: "max-content" }}
+        columns={columns as never}
+      />
+    );
   }
 }

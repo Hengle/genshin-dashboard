@@ -52,15 +52,16 @@ const LayoutComponent = ({ children }: Props) => {
         </Menu>
       </Header>
       <Content className="content">
-        {linkBreadcrumbs[router.pathname] && (
-          <Breadcrumb style={{ marginBottom: 10 }}>
-            {linkBreadcrumbs[router.pathname].map((v: string) => (
-              <Breadcrumb.Item key={v}>{v}</Breadcrumb.Item>
-            ))}
-          </Breadcrumb>
-        )}
-
-        <div className="main">{children}</div>
+        <div className="main">
+          {linkBreadcrumbs[router.pathname] && (
+            <Breadcrumb style={{ marginBottom: 10 }}>
+              {linkBreadcrumbs[router.pathname].map((v: string) => (
+                <Breadcrumb.Item key={v}>{v}</Breadcrumb.Item>
+              ))}
+            </Breadcrumb>
+          )}
+          {children}
+        </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>
         Koding Dev © {new Date().getFullYear()}
