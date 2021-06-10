@@ -1,0 +1,21 @@
+.content {
+    padding: 16px 50px;
+}
+
+.content > .main {
+    flex: 1 0 auto;
+    padding: 24px;
+    background: #fff;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.logo {
+    float: left;
+    color: white;
+    padding-right: 15px;
+}
