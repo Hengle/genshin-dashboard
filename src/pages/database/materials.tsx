@@ -89,7 +89,7 @@ const Materials = ({
         size="middle"
         expandable={{
           expandedRowRender: (record) => (
-            <div>
+            <div className="expanded-row">
               <b>Description</b>
               <p>{record.description}</p>
 
