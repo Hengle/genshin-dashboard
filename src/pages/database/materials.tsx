@@ -1,9 +1,9 @@
 import React from "react";
-import { fetchMaterials, MaterialData } from "@/api/database";
 import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
 import { QuestionOutlined, StarFilled } from "@ant-design/icons";
 import FallbackImage from "@/components/image";
+import { fetchMaterials, MaterialData } from "@/api/database/material";
 
 const getColumns = (
   materials: MaterialData[],

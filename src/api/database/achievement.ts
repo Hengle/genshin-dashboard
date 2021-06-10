@@ -1,110 +1,14 @@
-async function fetchData(url: string) {
-  return await (
-    await fetch(
-      `https://raw.githubusercontent.com/Dimbreath/GenshinData/master/${url}.json`,
-    )
-  ).json();
-}
+import { fetchRewards, RewardData, RewardMap } from "@/api/database/reward";
+import {
+  fetchMaterials,
+  MaterialData,
+  MaterialMap,
+} from "@/api/database/material";
+import { fetchTextMap, TextMap } from "@/api/database/text";
+import { fetchData } from "@/api/database/api";
 
-type TextMap = Record<string, string>;
-type MaterialMap = Record<number, MaterialData>;
-type RewardMap = Record<number, RewardData>;
 type AchievementMap = Record<number, Achievement>;
 type AchievementCategoryMap = Record<number, AchievementCategory>;
-
-export async function fetchTextMap(): Promise<TextMap> {
-  return await fetchData("TextMap/TextMapEN");
-}
-
-type MaterialExcelConfigData = {
-  Id: number;
-  NameTextMapHash: number;
-  DescTextMapHash: number;
-  InteractionTitleTextMapHash: number;
-  EffectDescTextMapHash: number;
-  SpecialDescTextMapHash: number;
-  TypeDescTextMapHash: number;
-  RankLevel?: number;
-  Icon?: string;
-};
-
-export type MaterialData = {
-  id: number;
-  name: string;
-  description: string;
-  interactionTitle: string;
-  effectDescription: string;
-  specialDescription: string;
-  type: string;
-  stars: number;
-  icon?: string;
-};
-
-export async function fetchMaterials(text?: TextMap) {
-  const data: MaterialExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/MaterialExcelConfigData",
-  );
-  const textMap = text ?? (await fetchTextMap());
-
-  return data.reduce((obj, item) => {
-    const name = textMap[item.NameTextMapHash];
-    if (name.length === 0) return obj;
-
-    return {
-      ...obj,
-      [item.Id]: {
-        name,
-        id: item.Id,
-        description: textMap[item.DescTextMapHash],
-        interactionTitle: textMap[item.InteractionTitleTextMapHash],
-        effectDescription: textMap[item.EffectDescTextMapHash],
-        specialDescription: textMap[item.SpecialDescTextMapHash],
-        type: textMap[item.TypeDescTextMapHash],
-        stars: item.RankLevel ?? 0,
-        icon: item.Icon,
-      },
-    };
-  }, {} as MaterialMap);
-}
-
-type RewardExcelConfigData = {
-  RewardId: number;
-  RewardItemList: {
-    ItemId: number;
-    ItemCount: number;
-  }[];
-};
-
-type RewardData = {
-  id: number;
-  items: {
-    item: MaterialData;
-    amount: number;
-  }[];
-};
-
-export async function fetchRewards(materials?: MaterialMap) {
-  const data: RewardExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/RewardExcelConfigData",
-  );
-  const materialMap = materials ?? (await fetchMaterials());
-
-  return data.reduce(
-    (obj, item) => ({
-      ...obj,
-      [item.RewardId]: {
-        id: item.RewardId,
-        items: item.RewardItemList.filter((v) => Object.keys(v).length > 0).map(
-          (v) => ({
-            item: materialMap[v.ItemId],
-            amount: v.ItemCount,
-          }),
-        ),
-      },
-    }),
-    {} as RewardMap,
-  );
-}
 
 type AchievementExcelConfigData = {
   TitleTextMapHash: number;

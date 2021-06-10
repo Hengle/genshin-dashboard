@@ -1,7 +1,7 @@
 import React from "react";
-import { Achievement, fetchAchievements } from "@/api/database";
 import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
+import { Achievement, fetchAchievements } from "@/api/database/achievement";
 
 const getColumns = (
   achievements: Achievement[],
