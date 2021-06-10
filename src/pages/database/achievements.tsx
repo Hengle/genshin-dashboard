@@ -76,6 +76,13 @@ const Achievements = ({
                 {achievementStringifier[record.trigger.type]?.(record) ??
                   JSON.stringify(record.trigger)}
               </p>
+
+              <b>Rewards</b>
+              <p>
+                {record.reward.items
+                  .map((item) => `${item.amount}x ${item.item.name}`)
+                  .join(", ")}
+              </p>
             </div>
           ),
         }}
@@ -86,10 +93,12 @@ const Achievements = ({
 
 export const getStaticProps = async () => ({
   props: {
-    achievements: Object.values(await fetchAchievements()).map((v) => ({
-      ...v,
-      key: v.id,
-    })),
+    achievements: Object.values(await fetchAchievements())
+      .filter((v) => v.name.length > 0)
+      .map((v) => ({
+        ...v,
+        key: v.id,
+      })),
   },
 });
 
