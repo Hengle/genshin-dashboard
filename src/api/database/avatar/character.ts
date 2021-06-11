@@ -6,6 +6,12 @@ import {
   fetchAvatarCurve,
 } from "@/api/database/avatar/curve";
 import { fetchRewards, RewardData, RewardMap } from "@/api/database/reward";
+import {
+  AvatarAscensions,
+  CharacterAscensionMap,
+  fetchAvatarAscensions,
+} from "@/api/database/avatar/ascend";
+import { fetchMaterials, MaterialMap } from "@/api/database/material";
 
 type CharacterMap = Record<number, CharacterData>;
 
@@ -24,6 +30,7 @@ type AvatarExcelConfigData = {
   NameTextMapHash: number;
   AvatarPromoteRewardLevelList: number[];
   AvatarPromoteRewardIdList: number[];
+  AvatarPromoteId: number;
   PropGrowCurves: {
     Type: string;
     GrowCurve: string;
@@ -39,6 +46,7 @@ type CharacterData = {
   bodyType: string;
   ascension: {
     rewards: AscensionRewards;
+    levels: AvatarAscensions;
   };
   stats: {
     base: {
@@ -63,7 +71,6 @@ type Curves = {
 };
 
 // TODO:
-// * Avatar Promote ID
 // * Skill Depot ID
 // * InitialWeapon
 // * WeaponType
@@ -71,7 +78,9 @@ type Curves = {
 export async function fetchCharacters(
   text?: TextMap,
   curves?: CharacterCurveMap,
+  material?: MaterialMap,
   reward?: RewardMap,
+  ascensions?: CharacterAscensionMap,
 ) {
   const data: AvatarExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AvatarExcelConfigData",
@@ -79,7 +88,9 @@ export async function fetchCharacters(
 
   const textMap = text ?? (await fetchTextMap());
   const curveMap = curves ?? (await fetchAvatarCurve());
-  const rewardMap = reward ?? (await fetchRewards());
+  const materialMap = material ?? (await fetchMaterials(textMap));
+  const rewardMap = reward ?? (await fetchRewards(materialMap));
+  const ascensionMap = ascensions ?? (await fetchAvatarAscensions(materialMap));
 
   return data.reduce(
     (obj, item) => ({
@@ -122,6 +133,7 @@ export async function fetchCharacters(
             }),
             {} as AscensionRewards,
           ),
+          levels: ascensionMap[item.AvatarPromoteId],
         },
       },
     }),
