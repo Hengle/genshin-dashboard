@@ -37,6 +37,8 @@ type AvatarExcelConfigData = {
   AvatarPromoteRewardIdList: number[];
   AvatarPromoteId: number;
   SkillDepotId: number;
+  StaminaRecoverSpeed: number;
+  WeaponType: string;
   PropGrowCurves: {
     Type: string;
     GrowCurve: string;
@@ -50,6 +52,7 @@ type CharacterData = {
   infoDescription: string;
   stars: number;
   bodyType: string;
+  weaponType: string;
   skills: AvatarSkillDepot;
   ascension: {
     rewards: AscensionRewards;
@@ -60,6 +63,7 @@ type CharacterData = {
       hp: number;
       attack: number;
       defence: number;
+      staminaRecover: number;
     };
     curves: Curves;
   };
@@ -78,10 +82,7 @@ type Curves = {
 };
 
 // TODO:
-// * Skill Depot ID
 // * InitialWeapon
-// * WeaponType
-// * StaminaRecoverSpeed
 export async function fetchCharacters(
   text?: TextMap,
   curves?: CharacterCurveMap,
@@ -111,12 +112,14 @@ export async function fetchCharacters(
         infoDescription: textMap[item.InfoDescTextMapHash],
         stars: item.QualityType === "QUALITY_PURPLE" ? 4 : 5,
         bodyType: item.BodyType,
+        weaponType: item.WeaponType,
         skills: skillDepotMap[item.SkillDepotId],
         stats: {
           base: {
             hp: item.HpBase,
             attack: item.AttackBase,
             defence: item.DefenseBase,
+            staminaRecover: item.StaminaRecoverSpeed,
           },
           curves: Object.values(curveMap).reduce(
             (obj, entry) => ({
