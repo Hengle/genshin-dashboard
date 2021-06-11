@@ -12,6 +12,11 @@ import {
   fetchAvatarAscensions,
 } from "@/api/database/avatar/ascend";
 import { fetchMaterials, MaterialMap } from "@/api/database/material";
+import {
+  AvatarSkillDepot,
+  fetchSkillDepot,
+  SkillDepotMap,
+} from "@/api/database/avatar/skill/depot";
 
 type CharacterMap = Record<number, CharacterData>;
 
@@ -31,6 +36,7 @@ type AvatarExcelConfigData = {
   AvatarPromoteRewardLevelList: number[];
   AvatarPromoteRewardIdList: number[];
   AvatarPromoteId: number;
+  SkillDepotId: number;
   PropGrowCurves: {
     Type: string;
     GrowCurve: string;
@@ -44,6 +50,7 @@ type CharacterData = {
   infoDescription: string;
   stars: number;
   bodyType: string;
+  skills: AvatarSkillDepot;
   ascension: {
     rewards: AscensionRewards;
     levels: AvatarAscensions;
@@ -81,6 +88,7 @@ export async function fetchCharacters(
   material?: MaterialMap,
   reward?: RewardMap,
   ascensions?: CharacterAscensionMap,
+  skillDepot?: SkillDepotMap,
 ) {
   const data: AvatarExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AvatarExcelConfigData",
@@ -91,6 +99,7 @@ export async function fetchCharacters(
   const materialMap = material ?? (await fetchMaterials(textMap));
   const rewardMap = reward ?? (await fetchRewards(materialMap));
   const ascensionMap = ascensions ?? (await fetchAvatarAscensions(materialMap));
+  const skillDepotMap = skillDepot ?? (await fetchSkillDepot());
 
   return data.reduce(
     (obj, item) => ({
@@ -102,6 +111,7 @@ export async function fetchCharacters(
         infoDescription: textMap[item.InfoDescTextMapHash],
         stars: item.QualityType === "QUALITY_PURPLE" ? 4 : 5,
         bodyType: item.BodyType,
+        skills: skillDepotMap[item.SkillDepotId],
         stats: {
           base: {
             hp: item.HpBase,
