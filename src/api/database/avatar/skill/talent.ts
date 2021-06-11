@@ -1,30 +1,12 @@
 import { fetchData } from "@/api/database/api";
-import { fetchTextMap, TextMap } from "@/api/database/text";
 import {
-  fetchMaterials,
-  MaterialData,
+  AvatarTalentExcelConfigData,
   MaterialMap,
-} from "@/api/database/material";
-
-export type TalentMap = Record<number, AvatarTalent>;
-
-type AvatarTalentExcelConfigData = {
-  TalentId: number;
-  NameTextMapHash: number;
-  DescTextMapHash: number;
-  MainCostItemId: number;
-  MainCostItemCount: number;
-};
-
-export type AvatarTalent = {
-  id: number;
-  name: string;
-  description: string;
-  cost: {
-    item: MaterialData;
-    amount: number;
-  };
-};
+  TalentMap,
+  TextMap,
+} from "@/types/database";
+import { fetchTextMap } from "@/api/database/text";
+import { fetchMaterials } from "@/api/database/material";
 
 export async function fetchTalents(text?: TextMap, material?: MaterialMap) {
   const data: AvatarTalentExcelConfigData[] = await fetchData(

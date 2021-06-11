@@ -1,27 +1,10 @@
-import {
-  fetchMaterials,
-  MaterialData,
-  MaterialMap,
-} from "@/api/database/material";
+import { fetchMaterials } from "@/api/database/material";
 import { fetchData } from "@/api/database/api";
-
-export type RewardMap = Record<number, RewardData>;
-
-type RewardExcelConfigData = {
-  RewardId: number;
-  RewardItemList: {
-    ItemId: number;
-    ItemCount: number;
-  }[];
-};
-
-export type RewardData = {
-  id: number;
-  items: {
-    item: MaterialData;
-    amount: number;
-  }[];
-};
+import {
+  MaterialMap,
+  RewardExcelConfigData,
+  RewardMap,
+} from "@/types/database";
 
 export async function fetchRewards(materials?: MaterialMap) {
   const data: RewardExcelConfigData[] = await fetchData(

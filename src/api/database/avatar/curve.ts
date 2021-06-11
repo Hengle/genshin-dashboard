@@ -1,28 +1,21 @@
 import { fetchData } from "@/api/database/api";
 import _ from "lodash";
+import {
+  AvatarCurveExcelConfigData,
+  CharacterCurveMap,
+  CurveType,
+} from "@/types/database";
 
-export type CharacterCurveMap = Record<number, AvatarCurve>;
-
-type AvatarCurveExcelConfigData = {
-  Level: number;
-  CurveInfos: {
-    Type: string;
-    Arith: string;
-    Value: number;
-  }[];
-};
-
-type AvatarCurve = {
-  level: number;
-  info: {
-    [type: string]: AvatarCurveInfo;
-  };
-};
-
-export type AvatarCurveInfo = {
-  operation: "ARITH_MULTI" | string;
-  value: number;
-};
+export function applyCurve(
+  curves: CharacterCurveMap,
+  current: number,
+  level: number,
+  stat: CurveType,
+) {
+  const info = curves[level].info[stat];
+  if (info.operation === "ARITH_MULTI") return current * info.value;
+  return current;
+}
 
 export async function fetchAvatarCurve() {
   const data: AvatarCurveExcelConfigData[] = await fetchData(

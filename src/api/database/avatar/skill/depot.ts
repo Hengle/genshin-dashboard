@@ -1,40 +1,12 @@
 import { fetchData } from "@/api/database/api";
 import {
-  AvatarSkill,
-  fetchSkills,
+  AvatarSkillDepotExcelConfigData,
+  SkillDepotMap,
   SkillMap,
-} from "@/api/database/avatar/skill/skill";
-import {
-  AvatarTalent,
-  fetchTalents,
   TalentMap,
-} from "@/api/database/avatar/skill/talent";
-
-export type SkillDepotMap = Record<number, AvatarSkillDepot>;
-
-type AvatarSkillDepotExcelConfigData = {
-  Id: number;
-  EnergySkill: number;
-  Skills: number[];
-  SubSkills: number[];
-  LeaderTalent: number;
-  Talents: number[];
-
-  // TODO: InherentProudSkillOpens
-};
-
-export type AvatarSkillDepot = {
-  id: number;
-  skills: {
-    energy: AvatarSkill;
-    skills: AvatarSkill[];
-    subSkills: AvatarSkill[];
-  };
-  constellations: {
-    leader: AvatarTalent;
-    talents: AvatarTalent[];
-  };
-};
+} from "@/types/database";
+import { fetchSkills } from "@/api/database/avatar/skill/skill";
+import { fetchTalents } from "@/api/database/avatar/skill/talent";
 
 export async function fetchSkillDepot(skill?: SkillMap, talent?: TalentMap) {
   const data: AvatarSkillDepotExcelConfigData[] = await fetchData(
@@ -50,12 +22,12 @@ export async function fetchSkillDepot(skill?: SkillMap, talent?: TalentMap) {
       [item.Id ?? 0]: {
         id: item.Id ?? 0,
         skills: {
-          energy: skillMap[item.EnergySkill],
+          energy: skillMap[item.EnergySkill] ?? null,
           skills: item.Skills.map((v) => skillMap[v]).filter((v) => v),
           subSkills: item.SubSkills.map((v) => skillMap[v]).filter((v) => v),
         },
         constellations: {
-          leader: talentMap[item.LeaderTalent],
+          leader: talentMap[item.LeaderTalent] ?? null,
           talents: item.Talents.map((v) => talentMap[v]).filter((v) => v),
         },
       },

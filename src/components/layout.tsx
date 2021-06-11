@@ -9,6 +9,7 @@ const links = {
   Home: "/",
   Database: {
     Achievements: "/database/achievements",
+    Characters: "/database/characters",
     Materials: "/database/materials",
   },
 };

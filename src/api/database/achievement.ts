@@ -1,46 +1,17 @@
-import { fetchRewards, RewardData, RewardMap } from "@/api/database/reward";
-import {
-  fetchMaterials,
-  MaterialData,
-  MaterialMap,
-} from "@/api/database/material";
-import { fetchTextMap, TextMap } from "@/api/database/text";
+import { fetchRewards } from "@/api/database/reward";
+import { fetchMaterials } from "@/api/database/material";
+import { fetchTextMap } from "@/api/database/text";
 import { fetchData } from "@/api/database/api";
-
-type AchievementMap = Record<number, Achievement>;
-type AchievementCategoryMap = Record<number, AchievementCategory>;
-
-type AchievementExcelConfigData = {
-  TitleTextMapHash: number;
-  DescTextMapHash: number;
-  FinishRewardId: number;
-  Id: number;
-  GoalId: number;
-  Progress: number;
-  PreStageAchievementId: number;
-  TriggerConfig: {
-    TriggerType: string;
-    ParamList: string[];
-  };
-};
-
-export type Achievement = {
-  id: number;
-  name: string;
-  description: string;
-  progress: number;
-  reward: RewardData;
-  trigger: AchievementTrigger;
-  category: AchievementCategory;
-  requirementId?: number;
-};
-
-interface AchievementTrigger {
-  type: string;
-  parameters?: string[];
-  items?: MaterialData[];
-  stars?: number;
-}
+import {
+  AchievementCategoryMap,
+  AchievementExcelConfigData,
+  AchievementGoalExcelConfigData,
+  AchievementMap,
+  AchievementTrigger,
+  MaterialMap,
+  RewardMap,
+  TextMap,
+} from "@/types/database";
 
 const achievementTriggerParser: Record<
   string,
@@ -99,16 +70,6 @@ export async function fetchAchievements(
     {} as AchievementMap,
   );
 }
-
-type AchievementGoalExcelConfigData = {
-  Id: number;
-  NameTextMapHash: number;
-};
-
-type AchievementCategory = {
-  id: number;
-  name: string;
-};
 
 export async function fetchAchievementCategories(text?: TextMap) {
   const data: AchievementGoalExcelConfigData[] = await fetchData(

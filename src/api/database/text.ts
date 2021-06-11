@@ -1,6 +1,5 @@
 import { fetchData } from "@/api/database/api";
-
-export type TextMap = Record<string, string>;
+import { TextMap } from "@/types/database";
 
 export async function fetchTextMap(): Promise<TextMap> {
   const data: Record<string, string> = await fetchData("TextMap/TextMapEN");

@@ -1,85 +1,23 @@
-import { fetchTextMap, TextMap } from "@/api/database/text";
+import { fetchTextMap } from "@/api/database/text";
 import { fetchData } from "@/api/database/api";
+import { fetchAvatarCurve } from "@/api/database/avatar/curve";
 import {
-  AvatarCurveInfo,
-  CharacterCurveMap,
-  fetchAvatarCurve,
-} from "@/api/database/avatar/curve";
-import { fetchRewards, RewardData, RewardMap } from "@/api/database/reward";
-import {
-  AvatarAscensions,
+  AscensionRewards,
+  AvatarExcelConfigData,
   CharacterAscensionMap,
-  fetchAvatarAscensions,
-} from "@/api/database/avatar/ascend";
-import { fetchMaterials, MaterialMap } from "@/api/database/material";
-import {
-  AvatarSkillDepot,
-  fetchSkillDepot,
+  CharacterCurveMap,
+  CharacterMap,
+  CurveInfo,
+  Curves,
+  MaterialMap,
+  RewardMap,
   SkillDepotMap,
-} from "@/api/database/avatar/skill/depot";
-
-type CharacterMap = Record<number, CharacterData>;
-
-type AvatarExcelConfigData = {
-  BodyType: string;
-  IconName: string;
-  SideIconName: string;
-  QualityType: string;
-  InitialWeapon: string;
-  DescTextMapHash: string;
-  InfoDescTextMapHash: string;
-  HpBase: number;
-  AttackBase: number;
-  DefenseBase: number;
-  Id: number;
-  NameTextMapHash: number;
-  AvatarPromoteRewardLevelList: number[];
-  AvatarPromoteRewardIdList: number[];
-  AvatarPromoteId: number;
-  SkillDepotId: number;
-  StaminaRecoverSpeed: number;
-  WeaponType: string;
-  PropGrowCurves: {
-    Type: string;
-    GrowCurve: string;
-  }[];
-};
-
-type CharacterData = {
-  id: number;
-  name: string;
-  description: string;
-  infoDescription: string;
-  stars: number;
-  bodyType: string;
-  weaponType: string;
-  skills: AvatarSkillDepot;
-  ascension: {
-    rewards: AscensionRewards;
-    levels: AvatarAscensions;
-  };
-  stats: {
-    base: {
-      hp: number;
-      attack: number;
-      defence: number;
-      staminaRecover: number;
-    };
-    curves: Curves;
-  };
-};
-
-type AscensionRewards = {
-  [level: number]: RewardData;
-};
-
-type CurveInfo = {
-  [type: string]: AvatarCurveInfo;
-};
-
-type Curves = {
-  [level: number]: CurveInfo;
-};
+  TextMap,
+} from "@/types/database";
+import { fetchMaterials } from "@/api/database/material";
+import { fetchRewards } from "@/api/database/reward";
+import { fetchAvatarAscensions } from "@/api/database/avatar/ascend";
+import { fetchSkillDepot } from "@/api/database/avatar/skill/depot";
 
 // TODO:
 // * InitialWeapon

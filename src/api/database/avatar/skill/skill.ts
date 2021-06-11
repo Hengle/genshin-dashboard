@@ -1,34 +1,10 @@
 import { fetchData } from "@/api/database/api";
-import { fetchTextMap, TextMap } from "@/api/database/text";
-
-export type SkillMap = Record<number, AvatarSkill>;
-
-type AvatarSkillExcelConfigData = {
-  Id: number;
-  NameTextMapHash: number;
-  DescTextMapHash: number;
-  CdTime?: number;
-  MaxChargeNum: number;
-  CostElemType?: string;
-  CostElemVal?: number;
-  TriggerID?: number;
-};
-
-export type AvatarSkill = {
-  id: number;
-  name: string;
-  description: string;
-  cooldown: {
-    time: number;
-    charges: number;
-  };
-  cost: {
-    element: {
-      type: string;
-      value: number;
-    } | null;
-  };
-};
+import {
+  AvatarSkillExcelConfigData,
+  SkillMap,
+  TextMap,
+} from "@/types/database";
+import { fetchTextMap } from "@/api/database/text";
 
 export async function fetchSkills(text?: TextMap) {
   const data: AvatarSkillExcelConfigData[] = await fetchData(
