@@ -20,11 +20,31 @@ export type AvatarAscensionMap = Record<number, AvatarAscensionList>;
 export type AvatarCurveMap = Record<number, AvatarCurve>;
 export type MaterialMap = Record<number, MaterialData>;
 export type RewardMap = Record<number, RewardData>;
+export type FetterInfoMap = Record<number, FetterInfo>;
 export type TextMap = Record<string, string>;
 
 type AvatarMap = Record<number, AvatarData>;
 type AchievementMap = Record<number, Achievement>;
 type AchievementCategoryMap = Record<number, AchievementCategory>;
+
+export type FetterInfoExcelConfigData = {
+  AvatarNativeTextMapHash: number;
+  AvatarVisionBeforTextMapHash: number;
+  AvatarConstellationBeforTextMapHash: number;
+  AvatarTitleTextMapHash: number;
+  AvatarDetailTextMapHash: number;
+  AvatarAssocType: string;
+  AvatarId: number;
+};
+
+export type FetterInfo = {
+  region: string;
+  element: string; // TODO: Typealias
+  constellation: string;
+  title: string;
+  description: string;
+  association: string;
+};
 
 type AvatarSkillDepotExcelConfigData = {
   Id: number;
@@ -41,8 +61,8 @@ export type AvatarSkillDepot = {
   id: number;
   skills: {
     energy?: AvatarSkill;
-    skills: AvatarSkill[];
-    subSkills: AvatarSkill[];
+    combat: AvatarSkill[];
+    secondary: AvatarSkill[];
   };
   constellations: {
     leader?: AvatarTalent;
@@ -70,7 +90,7 @@ export type AvatarSkill = {
     charges: number;
   };
   cost: {
-    element: {
+    element?: {
       type: string;
       value: number;
     } | null;
@@ -166,7 +186,7 @@ export type AvatarData = {
   stars: number;
   bodyType: string;
   weaponType: string;
-  skills: AvatarSkillDepot;
+  powers: AvatarSkillDepot;
   ascension: {
     rewards: Record<number, RewardData>; // TODO: Make these type alises
     levels: AvatarAscensionList;

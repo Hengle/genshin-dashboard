@@ -51,7 +51,7 @@ export async function fetchAvatars(
         stars: data.QualityType === "QUALITY_PURPLE" ? 4 : 5,
         bodyType: data.BodyType,
         weaponType: data.WeaponType,
-        skills: skillDepotMap[data.SkillDepotId],
+        powers: skillDepotMap[data.SkillDepotId],
         stats: {
           base: {
             HP: data.HpBase,
@@ -87,57 +87,4 @@ export async function fetchAvatars(
       }),
     )
     .value();
-  // return data.reduce(
-  //   (obj, item) => ({
-  //     ...obj,
-  //     [item.Id ?? 0]: {
-  //       id: item.Id ?? 0,
-  //       name: textMap[item.NameTextMapHash],
-  //       description: textMap[item.DescTextMapHash],
-  //       infoDescription: textMap[item.InfoDescTextMapHash],
-  //       stars: item.QualityType === "QUALITY_PURPLE" ? 4 : 5,
-  //       bodyType: item.BodyType,
-  //       weaponType: item.WeaponType,
-  //       skills: skillDepotMap[item.SkillDepotId],
-  //       stats: {
-  //         base: {
-  //           HP: item.HpBase,
-  //           ATK: item.AttackBase,
-  //           DEF: item.DefenseBase,
-  //           STA: item.StaminaRecoverSpeed,
-  //         },
-  //         curves: Object.values(curveMap).reduce(
-  //           (obj, entry) => ({
-  //             ...obj,
-  //             [entry.level]: {
-  //               level: entry.level,
-  //               info: item.PropGrowCurves.reduce(
-  //                 (obj, curve) => ({
-  //                   ...obj,
-  //                   [curve.Type]: curveMap[entry.level].info[curve.GrowCurve],
-  //                 }),
-  //                 {},
-  //               ),
-  //             } as AvatarCurve,
-  //           }),
-  //           {} as Record<number, AvatarCurve>,
-  //         ),
-  //       },
-  //       ascension: {
-  //         rewards: item.AvatarPromoteRewardLevelList.map((v, index) => [
-  //           v,
-  //           item.AvatarPromoteRewardIdList[index],
-  //         ]).reduce(
-  //           (obj, [level, id]) => ({
-  //             ...obj,
-  //             [level]: rewardMap[id],
-  //           }),
-  //           {} as AscensionRewards,
-  //         ),
-  //         levels: ascensionMap[item.AvatarPromoteId],
-  //       },
-  //     } as AvatarData,
-  //   }),
-  //   {} as AvatarMap,
-  // );
 }

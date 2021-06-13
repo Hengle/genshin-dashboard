@@ -12,7 +12,7 @@ import {
   Typography,
 } from "antd";
 import { CharacterCard, characters } from "@/assets/database/characters";
-import { calculateStat } from "@/util/avatar";
+import { calculateStat, getElement } from "@/util/avatar";
 import { StarFilled } from "@ant-design/icons";
 import { StatType } from "@/types/database";
 import _ from "lodash";
@@ -33,7 +33,9 @@ const CharacterComponent = ({
       <Col span={6}>
         <Card cover={<img alt="" src={character.assets.card} />}>
           <Card.Meta
-            title={character.data.name}
+            title={`${character.data.name} (${getElement(
+              character.data ?? "???",
+            )})`}
             description={
               <>
                 {Array.from(Array(character.data.stars), (v) => (
@@ -109,15 +111,16 @@ const Characters = ({
               style={{ width: 120 }}
               onChange={(v: string) => setCharacter(v)}
             >
-              <Select.OptGroup key="a">
-                <Select.Option value="a" key="a">
-                  mmm
-                </Select.Option>
-              </Select.OptGroup>
-              {chars.map((v) => (
-                <Select.Option value={v.name} key={v.id}>
-                  {v.name}
-                </Select.Option>
+              {Object.entries(
+                _.groupBy(chars, (data) => getElement(data) ?? "Other"),
+              ).map(([key, characters]) => (
+                <Select.OptGroup key={key}>
+                  {characters.map((character) => (
+                    <Select.Option value={character.name} key={character.id}>
+                      {character.name}
+                    </Select.Option>
+                  ))}
+                </Select.OptGroup>
               ))}
             </Select>
           </Space>

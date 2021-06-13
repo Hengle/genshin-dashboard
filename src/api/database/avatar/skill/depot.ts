@@ -28,8 +28,8 @@ export async function fetchSkillDepot(
         id: data.Id ?? 0,
         skills: {
           energy: skillMap[data.EnergySkill] ?? null,
-          skills: data.Skills.map((id) => skillMap[id]).filter((v) => v),
-          subSkills: data.SubSkills.map((id) => skillMap[id]).filter((v) => v),
+          combat: data.Skills.map((id) => skillMap[id]).filter((v) => v),
+          secondary: data.SubSkills.map((id) => skillMap[id]).filter((v) => v),
         },
         constellations: {
           leader: talentMap[data.LeaderTalent] ?? null,

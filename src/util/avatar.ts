@@ -40,3 +40,6 @@ export const calculateStat = (
 
   return Math.round(result);
 };
+
+export const getElement = (data: AvatarData) =>
+  data.powers.skills.energy?.cost.element?.type;
