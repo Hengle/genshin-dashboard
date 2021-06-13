@@ -1,4 +1,4 @@
-export type CharacterKey = "amber";
+export type CharacterKey = "amber" | string;
 export type StatType = "HP" | "ATK" | "DEF" | "STA";
 export type AvatarPropertyType =
   | "FIGHT_PROP_BASE_HP"

@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { fetchCharacters } from "@/api/database/avatar/character";
-import { Button, Card, Col, InputNumber, Row, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+  Typography,
+} from "antd";
 import { CharacterCard, characters } from "@/assets/database/characters";
 import { calculateStat } from "@/util/avatar";
 import { StarFilled } from "@ant-design/icons";
@@ -56,10 +65,12 @@ const CharacterComponent = ({
 const Characters = ({
   characters: chars,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const character = "amber";
-  const user = characters[character]?.(
-    chars.filter((v) => v.name.toLowerCase() === character.toLowerCase())[0],
-  );
+  const [character, setCharacter] = useState(chars[0].name);
+  const entry = chars.find((v) => v.name === character) ?? chars[0];
+  const user = characters[character.toLowerCase()]?.(entry) ?? {
+    data: entry,
+    assets: {},
+  };
 
   const [level, setLevel] = useState(1);
   const [ascended, setAscended] = useState(false);
@@ -72,28 +83,49 @@ const Characters = ({
   return (
     <div>
       <Typography.Title level={3}>Database: Characters</Typography.Title>
-      <Typography.Text>Level</Typography.Text>
-      <div>
-        <InputNumber
-          min={1}
-          max={90}
-          defaultValue={level}
-          onChange={(level) => setLevel(level ?? 1)}
-        />
-        <Button
-          onClick={() => setAscended(!ascended)}
-          type={ascended ? "primary" : "default"}
-          disabled={ascension?.rewards.unlockLevel !== level}
-        >
-          Ascended
-        </Button>
-      </div>
+      <Card>
+        <Card.Meta title="Controls" />
+        <Space direction="vertical">
+          <Space>
+            <Typography.Text>Level</Typography.Text>
+            <InputNumber
+              min={1}
+              max={90}
+              defaultValue={level}
+              onChange={(level) => setLevel(level ?? 1)}
+            />
+            <Button
+              onClick={() => setAscended(!ascended)}
+              type={ascended ? "primary" : "default"}
+              disabled={ascension?.rewards.unlockLevel !== level}
+            >
+              Ascended
+            </Button>
+          </Space>
+          <Space>
+            <Typography.Text>Character</Typography.Text>
+            <Select
+              defaultActiveFirstOption={true}
+              style={{ width: 120 }}
+              onChange={(v: string) => setCharacter(v)}
+            >
+              {chars.map((v) => (
+                <Select.Option value={v.name} key={v.id}>
+                  {v.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Space>
+        </Space>
+      </Card>
       <br />
       <CharacterComponent
         character={user}
         ascension={
           (ascension?.level ?? 0) +
-          (ascended || ascension?.rewards.unlockLevel !== level ? 1 : 0)
+          (ascended || (ascension && ascension?.rewards.unlockLevel !== level)
+            ? 1
+            : 0)
         }
         level={level}
       />
