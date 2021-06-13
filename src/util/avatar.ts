@@ -27,10 +27,10 @@ export const calculateStat = (
 
   if (property) {
     const avatarAscension =
-      data.ascension.levels.levels[
+      data.ascension.levels.ascensions[
         Math.min(
           ascension,
-          _.last(Object.values(data.ascension.levels.levels))?.level ?? 1,
+          _.last(Object.values(data.ascension.levels.ascensions))?.level ?? 1,
         )
       ];
 

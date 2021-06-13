@@ -3,6 +3,8 @@ import { fetchMaterials } from "@/api/database/material";
 import { fetchTextMap } from "@/api/database/text";
 import { fetchData } from "@/api/database/api";
 import {
+  Achievement,
+  AchievementCategory,
   AchievementCategoryMap,
   AchievementExcelConfigData,
   AchievementGoalExcelConfigData,
@@ -12,6 +14,7 @@ import {
   RewardMap,
   TextMap,
 } from "@/types/database";
+import _ from "lodash";
 
 const achievementTriggerParser: Record<
   string,
@@ -37,7 +40,7 @@ export async function fetchAchievements(
   rewards?: RewardMap,
   materials?: MaterialMap,
   categories?: AchievementCategoryMap,
-) {
+): Promise<AchievementMap> {
   const data: AchievementExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AchievementExcelConfigData",
   );
@@ -47,44 +50,44 @@ export async function fetchAchievements(
   const materialMap = materials ?? (await fetchMaterials());
   const categoryMap = categories ?? (await fetchAchievementCategories(textMap));
 
-  return data.reduce(
-    (obj, item) => ({
-      ...obj,
-      [item.Id]: {
-        id: item.Id,
-        progress: item.Progress,
-        name: textMap[item.TitleTextMapHash],
-        description: textMap[item.DescTextMapHash],
-        reward: rewardMap[item.FinishRewardId],
-        trigger: achievementTriggerParser[item.TriggerConfig.TriggerType]?.(
-          item.TriggerConfig.ParamList,
+  return _.chain(data)
+    .keyBy((data) => data.Id ?? 0)
+    .mapValues(
+      (data): Achievement => ({
+        id: data.Id ?? 0,
+        progress: data.Progress,
+        name: textMap[data.TitleTextMapHash],
+        description: textMap[data.DescTextMapHash],
+        reward: rewardMap[data.FinishRewardId],
+        category: categoryMap[data.GoalId] ?? { id: 0, name: "Unknown" },
+        requirementId: data.PreStageAchievementId ?? null,
+        trigger: achievementTriggerParser[data.TriggerConfig.TriggerType]?.(
+          data.TriggerConfig.ParamList,
           materialMap,
         ) ?? {
-          type: item.TriggerConfig.TriggerType,
-          parameters: item.TriggerConfig.ParamList,
+          type: data.TriggerConfig.TriggerType,
+          parameters: data.TriggerConfig.ParamList,
         },
-        category: categoryMap[item.GoalId] ?? { id: 0, name: "Unknown" },
-        requirementId: item.PreStageAchievementId ?? null,
-      },
-    }),
-    {} as AchievementMap,
-  );
+      }),
+    )
+    .value();
 }
 
-export async function fetchAchievementCategories(text?: TextMap) {
+export async function fetchAchievementCategories(
+  text?: TextMap,
+): Promise<AchievementCategoryMap> {
   const data: AchievementGoalExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AchievementGoalExcelConfigData",
   );
   const textMap = text ?? (await fetchTextMap());
 
-  return data.reduce(
-    (obj, item) => ({
-      ...obj,
-      [item.Id ?? 0]: {
-        id: item.Id ?? 0,
-        name: textMap[item.NameTextMapHash],
-      },
-    }),
-    {} as AchievementCategoryMap,
-  );
+  return _.chain(data)
+    .keyBy((data) => data.Id ?? 0)
+    .mapValues(
+      (data): AchievementCategory => ({
+        id: data.Id ?? 0,
+        name: textMap[data.NameTextMapHash],
+      }),
+    )
+    .value();
 }

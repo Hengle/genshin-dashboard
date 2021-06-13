@@ -1,39 +1,40 @@
 import { fetchData } from "@/api/database/api";
 import {
+  AvatarSkill,
   AvatarSkillExcelConfigData,
   AvatarSkillMap,
   TextMap,
 } from "@/types/database";
 import { fetchTextMap } from "@/api/database/text";
+import _ from "lodash";
 
-export async function fetchSkills(text?: TextMap) {
+export async function fetchSkills(text?: TextMap): Promise<AvatarSkillMap> {
   const data: AvatarSkillExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AvatarSkillExcelConfigData",
   );
 
   const textMap = text ?? (await fetchTextMap());
 
-  return data.reduce(
-    (obj, item) => ({
-      ...obj,
-      [item.Id ?? 0]: {
-        id: item.Id ?? 0,
-        name: textMap[item.NameTextMapHash],
-        description: textMap[item.DescTextMapHash],
+  return _.chain(data)
+    .keyBy((data) => data.Id ?? 0)
+    .mapValues(
+      (data): AvatarSkill => ({
+        id: data.Id ?? 0,
+        name: textMap[data.NameTextMapHash],
+        description: textMap[data.DescTextMapHash],
         cooldown: {
-          time: item.CdTime ?? 0,
-          charges: item.MaxChargeNum,
+          time: data.CdTime ?? 0,
+          charges: data.MaxChargeNum,
         },
         cost: {
-          element: item.CostElemType
+          element: data.CostElemType
             ? {
-                type: item.CostElemType,
-                value: item.CostElemVal ?? 0,
+                type: data.CostElemType,
+                value: data.CostElemVal ?? 0,
               }
             : null,
         },
-      },
-    }),
-    {} as AvatarSkillMap,
-  );
+      }),
+    )
+    .value();
 }

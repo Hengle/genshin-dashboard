@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchCharacters } from "@/api/database/avatar/character";
+import { fetchAvatarAscensions } from "@/api/database/avatar/ascend";
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {
-  res
-    .status(200)
-    .json(
-      Object.values(await fetchCharacters()).filter((v) => v.name === "Amber"),
-    );
+  res.status(200).json(await fetchAvatarAscensions());
+  // res.status(200).json((await fetchAvatars())[10000021]);
 }

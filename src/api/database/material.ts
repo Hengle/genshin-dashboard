@@ -1,34 +1,33 @@
 import { fetchTextMap } from "@/api/database/text";
 import { fetchData } from "@/api/database/api";
 import {
+  MaterialData,
   MaterialExcelConfigData,
   MaterialMap,
   TextMap,
 } from "@/types/database";
+import _ from "lodash";
 
-export async function fetchMaterials(text?: TextMap) {
+export async function fetchMaterials(text?: TextMap): Promise<MaterialMap> {
   const data: MaterialExcelConfigData[] = await fetchData(
     "ExcelBinOutput/MaterialExcelConfigData",
   );
   const textMap = text ?? (await fetchTextMap());
 
-  return data.reduce((obj, item) => {
-    const name = textMap[item.NameTextMapHash];
-    if (name.length === 0) return obj;
-
-    return {
-      ...obj,
-      [item.Id]: {
-        name,
-        id: item.Id,
-        description: textMap[item.DescTextMapHash],
-        interactionTitle: textMap[item.InteractionTitleTextMapHash],
-        effectDescription: textMap[item.EffectDescTextMapHash],
-        specialDescription: textMap[item.SpecialDescTextMapHash],
-        type: textMap[item.TypeDescTextMapHash],
-        stars: item.RankLevel ?? 0,
-        icon: item.Icon,
-      },
-    };
-  }, {} as MaterialMap);
+  return _.chain(data)
+    .keyBy((data) => data.Id ?? 0)
+    .mapValues(
+      (data): MaterialData => ({
+        id: data.Id ?? 0,
+        name: textMap[data.NameTextMapHash],
+        description: textMap[data.DescTextMapHash],
+        interactionTitle: textMap[data.InteractionTitleTextMapHash],
+        effectDescription: textMap[data.EffectDescTextMapHash],
+        specialDescription: textMap[data.SpecialDescTextMapHash],
+        type: textMap[data.TypeDescTextMapHash],
+        stars: data.RankLevel ?? 0,
+        icon: data.Icon,
+      }),
+    )
+    .value();
 }

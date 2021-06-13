@@ -16,7 +16,7 @@ type GrowthCurveType =
 export type SkillDepotMap = Record<number, AvatarSkillDepot>;
 export type AvatarTalentMap = Record<number, AvatarTalent>;
 export type AvatarSkillMap = Record<number, AvatarSkill>;
-export type AvatarAscensionMap = Record<number, AvatarAscensions>;
+export type AvatarAscensionMap = Record<number, AvatarAscensionList>;
 export type AvatarCurveMap = Record<number, AvatarCurve>;
 export type MaterialMap = Record<number, MaterialData>;
 export type RewardMap = Record<number, RewardData>;
@@ -111,9 +111,9 @@ type AvatarPromoteExcelConfigData = {
   }[];
 };
 
-export type AvatarAscensions = {
+export type AvatarAscensionList = {
   id: number;
-  levels: Record<number, AvatarAscension>;
+  ascensions: Record<number, AvatarAscension>;
 };
 
 type AvatarAscension = {
@@ -168,17 +168,13 @@ export type AvatarData = {
   weaponType: string;
   skills: AvatarSkillDepot;
   ascension: {
-    rewards: AscensionRewards;
-    levels: AvatarAscensions;
+    rewards: Record<number, RewardData>; // TODO: Make these type alises
+    levels: AvatarAscensionList;
   };
   stats: {
     base: Record<StatType, number>;
     curves: Record<number, AvatarCurve>;
   };
-};
-
-type AscensionRewards = {
-  [level: number]: RewardData;
 };
 
 type AvatarCurveExcelConfigData = {

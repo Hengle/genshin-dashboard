@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
-import { fetchCharacters } from "@/api/database/avatar/character";
+import { fetchAvatars } from "@/api/database/avatar/character";
 import {
   Button,
   Card,
@@ -75,7 +75,7 @@ const Characters = ({
   const [level, setLevel] = useState(1);
   const [ascended, setAscended] = useState(false);
   const ascension = _.last(
-    Object.values(user.data.ascension.levels.levels).filter(
+    Object.values(user.data.ascension.levels.ascensions).filter(
       (value) => value.rewards.unlockLevel <= level,
     ),
   );
@@ -109,6 +109,11 @@ const Characters = ({
               style={{ width: 120 }}
               onChange={(v: string) => setCharacter(v)}
             >
+              <Select.OptGroup key="a">
+                <Select.Option value="a" key="a">
+                  mmm
+                </Select.Option>
+              </Select.OptGroup>
               {chars.map((v) => (
                 <Select.Option value={v.name} key={v.id}>
                   {v.name}
@@ -135,7 +140,7 @@ const Characters = ({
 
 export const getStaticProps = async () => ({
   props: {
-    characters: Object.values(await fetchCharacters())
+    characters: Object.values(await fetchAvatars())
       .filter((v) => v.name.length > 0)
       .map((v) => ({
         ...v,

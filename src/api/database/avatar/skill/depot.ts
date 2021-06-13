@@ -1,17 +1,19 @@
 import { fetchData } from "@/api/database/api";
 import {
+  AvatarSkillDepot,
   AvatarSkillDepotExcelConfigData,
-  SkillDepotMap,
   AvatarSkillMap,
   AvatarTalentMap,
+  SkillDepotMap,
 } from "@/types/database";
 import { fetchSkills } from "@/api/database/avatar/skill/skill";
 import { fetchTalents } from "@/api/database/avatar/skill/talent";
+import _ from "lodash";
 
 export async function fetchSkillDepot(
   skill?: AvatarSkillMap,
   talent?: AvatarTalentMap,
-) {
+): Promise<SkillDepotMap> {
   const data: AvatarSkillDepotExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AvatarSkillDepotExcelConfigData",
   );
@@ -19,22 +21,21 @@ export async function fetchSkillDepot(
   const skillMap = skill ?? (await fetchSkills());
   const talentMap = talent ?? (await fetchTalents());
 
-  return data.reduce(
-    (obj, item) => ({
-      ...obj,
-      [item.Id ?? 0]: {
-        id: item.Id ?? 0,
+  return _.chain(data)
+    .keyBy((data) => data.Id ?? 0)
+    .mapValues(
+      (data): AvatarSkillDepot => ({
+        id: data.Id ?? 0,
         skills: {
-          energy: skillMap[item.EnergySkill] ?? null,
-          skills: item.Skills.map((v) => skillMap[v]).filter((v) => v),
-          subSkills: item.SubSkills.map((v) => skillMap[v]).filter((v) => v),
+          energy: skillMap[data.EnergySkill] ?? null,
+          skills: data.Skills.map((id) => skillMap[id]).filter((v) => v),
+          subSkills: data.SubSkills.map((id) => skillMap[id]).filter((v) => v),
         },
         constellations: {
-          leader: talentMap[item.LeaderTalent] ?? null,
-          talents: item.Talents.map((v) => talentMap[v]).filter((v) => v),
+          leader: talentMap[data.LeaderTalent] ?? null,
+          talents: data.Talents.map((id) => talentMap[id]).filter((v) => v),
         },
-      },
-    }),
-    {} as SkillDepotMap,
-  );
+      }),
+    )
+    .value();
 }

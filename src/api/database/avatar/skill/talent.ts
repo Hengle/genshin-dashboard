@@ -1,14 +1,19 @@
 import { fetchData } from "@/api/database/api";
 import {
+  AvatarTalent,
   AvatarTalentExcelConfigData,
-  MaterialMap,
   AvatarTalentMap,
+  MaterialMap,
   TextMap,
 } from "@/types/database";
 import { fetchTextMap } from "@/api/database/text";
 import { fetchMaterials } from "@/api/database/material";
+import _ from "lodash";
 
-export async function fetchTalents(text?: TextMap, material?: MaterialMap) {
+export async function fetchTalents(
+  text?: TextMap,
+  material?: MaterialMap,
+): Promise<AvatarTalentMap> {
   const data: AvatarTalentExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AvatarTalentExcelConfigData",
   );
@@ -16,19 +21,18 @@ export async function fetchTalents(text?: TextMap, material?: MaterialMap) {
   const textMap = text ?? (await fetchTextMap());
   const materialMap = material ?? (await fetchMaterials(textMap));
 
-  return data.reduce(
-    (obj, item) => ({
-      ...obj,
-      [item.TalentId ?? 0]: {
-        id: item.TalentId ?? 0,
-        name: textMap[item.NameTextMapHash],
-        description: textMap[item.DescTextMapHash],
+  return _.chain(data)
+    .keyBy((data) => data.TalentId ?? 0)
+    .mapValues(
+      (data): AvatarTalent => ({
+        id: data.TalentId ?? 0,
+        name: textMap[data.NameTextMapHash],
+        description: textMap[data.DescTextMapHash],
         cost: {
-          item: materialMap[item.MainCostItemId],
-          amount: item.MainCostItemCount,
+          item: materialMap[data.MainCostItemId],
+          amount: data.MainCostItemCount,
         },
-      },
-    }),
-    {} as AvatarTalentMap,
-  );
+      }),
+    )
+    .value();
 }

@@ -10,7 +10,8 @@
     "lint:test": "eslint src",
     "prettier:fix": "prettier \"src/**/*.ts(x)?\" --write",
     "prettier:test": "prettier \"src/**/*.ts(x)?\" --list-different",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "precommit": "tsc && npm run lint:fix && npm run prettier:fix"
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
