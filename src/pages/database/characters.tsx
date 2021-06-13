@@ -105,7 +105,7 @@ const Characters = ({
           <Space>
             <Typography.Text>Character</Typography.Text>
             <Select
-              defaultActiveFirstOption={true}
+              defaultValue={chars[0].name}
               style={{ width: 120 }}
               onChange={(v: string) => setCharacter(v)}
             >
