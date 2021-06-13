@@ -1,6 +1,6 @@
 export type CharacterKey = "amber" | string;
 export type StatType = "HP" | "ATK" | "DEF" | "STA";
-export type AvatarPropertyType =
+export type CurvePropertyType =
   | "FIGHT_PROP_BASE_HP"
   | "FIGHT_PROP_BASE_DEFENSE"
   | "FIGHT_PROP_BASE_ATTACK"
@@ -17,10 +17,11 @@ export type SkillDepotMap = Record<number, AvatarSkillDepot>;
 export type AvatarTalentMap = Record<number, AvatarTalent>;
 export type AvatarSkillMap = Record<number, AvatarSkill>;
 export type AvatarAscensionMap = Record<number, AvatarAscensionList>;
-export type AvatarCurveMap = Record<number, AvatarCurve>;
+export type CurveLevelMap = Record<number, CurveLevel>;
 export type MaterialMap = Record<number, MaterialData>;
 export type RewardMap = Record<number, RewardData>;
 export type FetterInfoMap = Record<number, FetterInfo>;
+export type WeaponMap = Record<number, WeaponData>;
 export type TextMap = Record<string, string>;
 
 type AvatarMap = Record<number, AvatarData>;
@@ -122,7 +123,7 @@ type AvatarPromoteExcelConfigData = {
   UnlockMaxLevel: number;
   RequiredPlayerLevel: number;
   AddProps: {
-    PropType: AvatarPropertyType;
+    PropType: CurvePropertyType;
     Value?: number;
   }[];
   CostItems: {
@@ -149,7 +150,7 @@ type AvatarAscension = {
   };
   rewards: {
     unlockLevel: number;
-    properties: Record<AvatarPropertyType, number>;
+    properties: Record<CurvePropertyType, number>;
   };
 };
 
@@ -193,11 +194,11 @@ export type AvatarData = {
   };
   stats: {
     base: Record<StatType, number>;
-    curves: Record<number, AvatarCurve>;
+    curves: Record<number, CurveLevel>;
   };
 };
 
-type AvatarCurveExcelConfigData = {
+type CurveExcelConfigData = {
   Level: number;
   CurveInfos: {
     Type: GrowthCurveType;
@@ -206,12 +207,12 @@ type AvatarCurveExcelConfigData = {
   }[];
 };
 
-type AvatarCurve = {
+type CurveLevel = {
   level: number;
-  info: Record<AvatarPropertyType, AvatarCurveInfo>;
+  info: Record<CurvePropertyType, CurveInfo>;
 };
 
-export type AvatarCurveInfo = {
+export type CurveInfo = {
   operation: "ARITH_MULTI" | string;
   value: number;
 };
@@ -296,4 +297,37 @@ export type RewardData = {
     item: MaterialData;
     amount: number;
   }[];
+};
+
+export type WeaponExcelConfigData = {
+  Id: number;
+  Icon?: string;
+  WeaponType: string;
+  RankLevel: number;
+  WeaponBaseExp: number;
+  NameTextMapHash: number;
+  DescTextMapHash: number;
+  WeaponPromoteId: number; // TODO
+  WeaponProp: {
+    PropType: string;
+    InitValue: number;
+    Type: string;
+  }[];
+};
+
+export type WeaponData = {
+  id: number;
+  icon: string | null;
+  type: string;
+  stars: number;
+  baseExperience: number;
+  name: string;
+  description: string;
+  properties: Record<
+    CurvePropertyType,
+    {
+      value: number;
+      curve: Record<number, CurveInfo>;
+    }
+  >;
 };

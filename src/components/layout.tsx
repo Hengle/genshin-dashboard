@@ -11,6 +11,7 @@ const links = {
     Achievements: "/database/achievements",
     Characters: "/database/characters",
     Materials: "/database/materials",
+    Weapons: "/database/weapons",
   },
 };
 

@@ -1,12 +1,12 @@
 import {
-  AvatarCurveInfo,
+  CurveInfo,
   AvatarData,
-  AvatarPropertyType,
+  CurvePropertyType,
   StatType,
 } from "@/types/database";
 import _ from "lodash";
 
-const statMappings: Record<StatType, { property: AvatarPropertyType }> = {
+const statMappings: Record<StatType, { property: CurvePropertyType }> = {
   HP: { property: "FIGHT_PROP_BASE_HP" },
   ATK: { property: "FIGHT_PROP_BASE_ATTACK" },
   DEF: { property: "FIGHT_PROP_BASE_DEFENSE" },
@@ -22,7 +22,7 @@ export const calculateStat = (
   let result = data.stats.base[type];
   const property = statMappings[type]?.property;
 
-  const curve: AvatarCurveInfo = data.stats.curves[level].info[property];
+  const curve: CurveInfo = data.stats.curves[level].info[property];
   if (curve?.operation === "ARITH_MULTI") result *= curve?.value ?? 1;
 
   if (property) {

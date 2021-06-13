@@ -1,10 +1,10 @@
 import { fetchTextMap } from "@/api/database/text";
 import { fetchData } from "@/api/database/api";
-import { fetchAvatarCurve } from "@/api/database/avatar/curve";
+import { fetchCurve } from "@/api/database/curve";
 import {
   AvatarAscensionMap,
-  AvatarCurve,
-  AvatarCurveMap,
+  CurveLevel,
+  CurveLevelMap,
   AvatarData,
   AvatarExcelConfigData,
   AvatarMap,
@@ -23,7 +23,7 @@ import _ from "lodash";
 // * InitialWeapon
 export async function fetchAvatars(
   text?: TextMap,
-  curves?: AvatarCurveMap,
+  curves?: CurveLevelMap,
   material?: MaterialMap,
   reward?: RewardMap,
   ascensions?: AvatarAscensionMap,
@@ -34,7 +34,7 @@ export async function fetchAvatars(
   );
 
   const textMap = text ?? (await fetchTextMap());
-  const curveMap = curves ?? (await fetchAvatarCurve());
+  const curveMap = curves ?? (await fetchCurve("AvatarCurveExcelConfigData"));
   const materialMap = material ?? (await fetchMaterials(textMap));
   const rewardMap = reward ?? (await fetchRewards(materialMap));
   const ascensionMap = ascensions ?? (await fetchAvatarAscensions(materialMap));
@@ -62,7 +62,7 @@ export async function fetchAvatars(
           curves: _.chain(Object.values(curveMap))
             .keyBy("level")
             .mapValues(
-              (curve): AvatarCurve => ({
+              (curve): CurveLevel => ({
                 level: curve.level,
                 info: _.chain(data.PropGrowCurves)
                   .keyBy("Type")

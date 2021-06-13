@@ -33,9 +33,9 @@ const CharacterComponent = ({
       <Col span={6}>
         <Card cover={<img alt="" src={character.assets.card} />}>
           <Card.Meta
-            title={`${character.data.name} (${getElement(
-              character.data ?? "???",
-            )})`}
+            title={`${character.data.name} (${
+              getElement(character.data) ?? "???"
+            })`}
             description={
               <>
                 {Array.from(Array(character.data.stars), (v) => (
@@ -109,10 +109,14 @@ const Characters = ({
             <Select
               defaultValue={chars[0].name}
               style={{ width: 120 }}
+              showSearch={true}
               onChange={(v: string) => setCharacter(v)}
             >
               {Object.entries(
-                _.groupBy(chars, (data) => getElement(data) ?? "Other"),
+                _.chain(chars)
+                  .uniqBy("name")
+                  .groupBy((data) => getElement(data) ?? "Other")
+                  .value(),
               ).map(([key, characters]) => (
                 <Select.OptGroup key={key}>
                   {characters.map((character) => (
