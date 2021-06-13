@@ -1,11 +1,10 @@
 import amber from "./amber";
-import { CharacterData } from "@/api/database/avatar/character";
-import { CharacterKey } from "@/types/database";
+import { CharacterKey, AvatarData } from "@/types/database";
 
-export type CharacterCardBuilder = (data: CharacterData) => CharacterCard;
+export type CharacterCardBuilder = (data: AvatarData) => CharacterCard;
 
 export type CharacterCard = {
-  data: CharacterData;
+  data: AvatarData;
   assets: {
     card: string;
   };

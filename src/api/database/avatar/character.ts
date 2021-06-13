@@ -3,12 +3,12 @@ import { fetchData } from "@/api/database/api";
 import { fetchAvatarCurve } from "@/api/database/avatar/curve";
 import {
   AscensionRewards,
+  AvatarAscensionMap,
+  AvatarCurve,
+  AvatarCurveMap,
+  AvatarData,
   AvatarExcelConfigData,
-  CharacterAscensionMap,
-  CharacterCurveMap,
-  CharacterMap,
-  CurveInfo,
-  Curves,
+  AvatarMap,
   MaterialMap,
   RewardMap,
   SkillDepotMap,
@@ -23,10 +23,10 @@ import { fetchSkillDepot } from "@/api/database/avatar/skill/depot";
 // * InitialWeapon
 export async function fetchCharacters(
   text?: TextMap,
-  curves?: CharacterCurveMap,
+  curves?: AvatarCurveMap,
   material?: MaterialMap,
   reward?: RewardMap,
-  ascensions?: CharacterAscensionMap,
+  ascensions?: AvatarAscensionMap,
   skillDepot?: SkillDepotMap,
 ) {
   const data: AvatarExcelConfigData[] = await fetchData(
@@ -54,23 +54,26 @@ export async function fetchCharacters(
         skills: skillDepotMap[item.SkillDepotId],
         stats: {
           base: {
-            hp: item.HpBase,
-            attack: item.AttackBase,
-            defence: item.DefenseBase,
-            staminaRecover: item.StaminaRecoverSpeed,
+            HP: item.HpBase,
+            ATK: item.AttackBase,
+            DEF: item.DefenseBase,
+            STA: item.StaminaRecoverSpeed,
           },
           curves: Object.values(curveMap).reduce(
             (obj, entry) => ({
               ...obj,
-              [entry.level]: item.PropGrowCurves.reduce(
-                (obj, curve) => ({
-                  ...obj,
-                  [curve.Type]: curveMap[entry.level].info[curve.GrowCurve],
-                }),
-                {} as CurveInfo,
-              ),
+              [entry.level]: {
+                level: entry.level,
+                info: item.PropGrowCurves.reduce(
+                  (obj, curve) => ({
+                    ...obj,
+                    [curve.Type]: curveMap[entry.level].info[curve.GrowCurve],
+                  }),
+                  {},
+                ),
+              } as AvatarCurve,
             }),
-            {} as Curves,
+            {} as Record<number, AvatarCurve>,
           ),
         },
         ascension: {
@@ -86,8 +89,8 @@ export async function fetchCharacters(
           ),
           levels: ascensionMap[item.AvatarPromoteId],
         },
-      },
+      } as AvatarData,
     }),
-    {} as CharacterMap,
+    {} as AvatarMap,
   );
 }

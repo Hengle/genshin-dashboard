@@ -2,13 +2,16 @@ import { fetchData } from "@/api/database/api";
 import {
   AvatarSkillDepotExcelConfigData,
   SkillDepotMap,
-  SkillMap,
-  TalentMap,
+  AvatarSkillMap,
+  AvatarTalentMap,
 } from "@/types/database";
 import { fetchSkills } from "@/api/database/avatar/skill/skill";
 import { fetchTalents } from "@/api/database/avatar/skill/talent";
 
-export async function fetchSkillDepot(skill?: SkillMap, talent?: TalentMap) {
+export async function fetchSkillDepot(
+  skill?: AvatarSkillMap,
+  talent?: AvatarTalentMap,
+) {
   const data: AvatarSkillDepotExcelConfigData[] = await fetchData(
     "ExcelBinOutput/AvatarSkillDepotExcelConfigData",
   );

@@ -1,27 +1,28 @@
-import { AvatarSkill } from "@/api/database/avatar/skill/skill";
-import { AvatarTalent } from "@/api/database/avatar/skill/talent";
-import { MaterialData } from "@/api/database/material";
-import { RewardData } from "@/api/database/reward";
-import { AvatarCurveInfo } from "@/api/database/avatar/curve";
-
 export type CharacterKey = "amber";
+export type StatType = "HP" | "ATK" | "DEF" | "STA";
+export type AvatarPropertyType =
+  | "FIGHT_PROP_BASE_HP"
+  | "FIGHT_PROP_BASE_DEFENSE"
+  | "FIGHT_PROP_BASE_ATTACK"
+  | "FIGHT_PROP_CRITICAL_HURT"
+  | string;
 
-type CurveType =
+type GrowthCurveType =
   | "GROW_CURVE_HP_S4"
   | "GROW_CURVE_ATTACK_S4"
   | "GROW_CURVE_HP_S5"
   | "GROW_CURVE_ATTACK_S5";
 
 export type SkillDepotMap = Record<number, AvatarSkillDepot>;
-export type TalentMap = Record<number, AvatarTalent>;
-export type SkillMap = Record<number, AvatarSkill>;
-export type CharacterAscensionMap = Record<number, AvatarAscensions>;
-export type CharacterCurveMap = Record<number, AvatarCurve>;
+export type AvatarTalentMap = Record<number, AvatarTalent>;
+export type AvatarSkillMap = Record<number, AvatarSkill>;
+export type AvatarAscensionMap = Record<number, AvatarAscensions>;
+export type AvatarCurveMap = Record<number, AvatarCurve>;
 export type MaterialMap = Record<number, MaterialData>;
 export type RewardMap = Record<number, RewardData>;
 export type TextMap = Record<string, string>;
 
-type CharacterMap = Record<number, CharacterData>;
+type AvatarMap = Record<number, AvatarData>;
 type AchievementMap = Record<number, Achievement>;
 type AchievementCategoryMap = Record<number, AchievementCategory>;
 
@@ -101,7 +102,7 @@ type AvatarPromoteExcelConfigData = {
   UnlockMaxLevel: number;
   RequiredPlayerLevel: number;
   AddProps: {
-    PropType: string;
+    PropType: AvatarPropertyType;
     Value?: number;
   }[];
   CostItems: {
@@ -112,9 +113,7 @@ type AvatarPromoteExcelConfigData = {
 
 export type AvatarAscensions = {
   id: number;
-  levels: {
-    [level: number]: AvatarAscension;
-  };
+  levels: Record<number, AvatarAscension>;
 };
 
 type AvatarAscension = {
@@ -130,10 +129,7 @@ type AvatarAscension = {
   };
   rewards: {
     unlockLevel: number;
-    properties: {
-      type: string;
-      value?: number;
-    }[];
+    properties: Record<AvatarPropertyType, number>;
   };
 };
 
@@ -162,7 +158,7 @@ type AvatarExcelConfigData = {
   }[];
 };
 
-export type CharacterData = {
+export type AvatarData = {
   id: number;
   name: string;
   description: string;
@@ -176,13 +172,8 @@ export type CharacterData = {
     levels: AvatarAscensions;
   };
   stats: {
-    base: {
-      hp: number;
-      attack: number;
-      defence: number;
-      staminaRecover: number;
-    };
-    curves: Curves;
+    base: Record<StatType, number>;
+    curves: Record<number, AvatarCurve>;
   };
 };
 
@@ -190,18 +181,10 @@ type AscensionRewards = {
   [level: number]: RewardData;
 };
 
-type CurveInfo = {
-  [type: string]: AvatarCurveInfo;
-};
-
-type Curves = {
-  [level: number]: CurveInfo;
-};
-
 type AvatarCurveExcelConfigData = {
   Level: number;
   CurveInfos: {
-    Type: CurveType;
+    Type: GrowthCurveType;
     Arith: string;
     Value: number;
   }[];
@@ -209,9 +192,7 @@ type AvatarCurveExcelConfigData = {
 
 type AvatarCurve = {
   level: number;
-  info: {
-    [type: string]: AvatarCurveInfo;
-  };
+  info: Record<AvatarPropertyType, AvatarCurveInfo>;
 };
 
 export type AvatarCurveInfo = {

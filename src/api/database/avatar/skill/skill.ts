@@ -1,7 +1,7 @@
 import { fetchData } from "@/api/database/api";
 import {
   AvatarSkillExcelConfigData,
-  SkillMap,
+  AvatarSkillMap,
   TextMap,
 } from "@/types/database";
 import { fetchTextMap } from "@/api/database/text";
@@ -34,6 +34,6 @@ export async function fetchSkills(text?: TextMap) {
         },
       },
     }),
-    {} as SkillMap,
+    {} as AvatarSkillMap,
   );
 }

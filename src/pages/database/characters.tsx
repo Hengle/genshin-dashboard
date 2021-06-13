@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { fetchCharacters } from "@/api/database/avatar/character";
-import { Card, Col, Row } from "antd";
+import { Card, Col, InputNumber, Row } from "antd";
 import { CharacterCard, characters } from "@/assets/database/characters";
-import { applyCurve, fetchAvatarCurve } from "@/api/database/avatar/curve";
-import { CharacterCurveMap } from "@/types/database";
+import { calculateStat } from "@/util/avatar";
 
 type CharacterCardProps = {
   character: CharacterCard;
-  curves: CharacterCurveMap;
+  level: number;
+  ascension: number;
 };
 
-const CharacterComponent = ({ character, curves }: CharacterCardProps) => (
+const CharacterComponent = ({
+  character,
+  level,
+  ascension,
+}: CharacterCardProps) => (
   <div>
     <Row>
       <Col>
@@ -20,18 +24,10 @@ const CharacterComponent = ({ character, curves }: CharacterCardProps) => (
       </Col>
       <Col>
         <h1>Base Stats</h1>
-        <p>
-          HP:
-          {applyCurve(
-            curves,
-            character.data.stats.base.hp,
-            50,
-            "GROW_CURVE_HP_S4",
-          )}
-        </p>
-        <p>ATK: {character.data.stats.base.attack}</p>
-        <p>DEF: {character.data.stats.base.defence}</p>
-        <p>STM: {character.data.stats.base.staminaRecover}</p>
+        <p>HP: {calculateStat(character.data, "HP", level, ascension)}</p>
+        <p>ATK: {calculateStat(character.data, "ATK", level, ascension)}</p>
+        <p>DEF: {calculateStat(character.data, "DEF", level, ascension)}</p>
+        <p>STA: {calculateStat(character.data, "STA", level, ascension)}</p>
       </Col>
     </Row>
   </div>
@@ -39,18 +35,36 @@ const CharacterComponent = ({ character, curves }: CharacterCardProps) => (
 
 const Characters = ({
   characters: chars,
-  curves,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const character = "amber";
   const user = characters[character]?.(
     chars.filter((v) => v.name.toLowerCase() === character.toLowerCase())[0],
   );
 
+  const [level, setLevel] = useState(1);
+  const [ascension, setAscension] = useState(1);
+
   return (
     <div>
       <h1>Database: Characters</h1>
       <Card>
-        <CharacterComponent character={user} curves={curves} />
+        <InputNumber
+          min={1}
+          max={90}
+          defaultValue={level}
+          onChange={(level) => setLevel(level ?? 1)}
+        />
+        <InputNumber
+          min={1}
+          max={Object.keys(user.data.ascension.levels.levels).length}
+          defaultValue={ascension}
+          onChange={(level) => setAscension(level ?? 1)}
+        />
+        <CharacterComponent
+          character={user}
+          ascension={ascension}
+          level={level}
+        />
       </Card>
     </div>
   );
@@ -64,7 +78,6 @@ export const getStaticProps = async () => ({
         ...v,
         key: v.id,
       })),
-    curves: await fetchAvatarCurve(),
   },
 });
 

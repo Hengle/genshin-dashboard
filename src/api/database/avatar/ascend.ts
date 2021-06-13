@@ -3,7 +3,7 @@ import { fetchMaterials } from "@/api/database/material";
 import {
   AvatarAscension,
   AvatarPromoteExcelConfigData,
-  CharacterAscensionMap,
+  AvatarAscensionMap,
   MaterialMap,
 } from "@/types/database";
 
@@ -35,15 +35,18 @@ export async function fetchAvatarAscensions(material?: MaterialMap) {
             },
             rewards: {
               unlockLevel: item.UnlockMaxLevel,
-              properties: item.AddProps.map((v) => ({
-                type: v.PropType,
-                value: v.Value ?? null,
-              })),
+              properties: item.AddProps.reduce(
+                (obj, entry) => ({
+                  ...obj,
+                  [entry.PropType]: entry.Value ?? 0,
+                }),
+                {},
+              ),
             },
           } as AvatarAscension,
         },
       },
     }),
-    {} as CharacterAscensionMap,
+    {} as AvatarAscensionMap,
   );
 }

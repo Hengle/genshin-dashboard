@@ -2,7 +2,7 @@ import { fetchData } from "@/api/database/api";
 import {
   AvatarTalentExcelConfigData,
   MaterialMap,
-  TalentMap,
+  AvatarTalentMap,
   TextMap,
 } from "@/types/database";
 import { fetchTextMap } from "@/api/database/text";
@@ -29,6 +29,6 @@ export async function fetchTalents(text?: TextMap, material?: MaterialMap) {
         },
       },
     }),
-    {} as TalentMap,
+    {} as AvatarTalentMap,
   );
 }
