@@ -1,10 +1,22 @@
 export type CharacterKey = "amber" | string;
-export type StatType = "HP" | "ATK" | "DEF" | "STA";
+export type StatType =
+  | "HP"
+  | "ATTACK"
+  | "DEFENCE"
+  | "STAMINA"
+  | "CRITICAL_RATE"
+  | "CRITICAL_DAMAGE"
+  | "CHARGE_EFFICIENCY"
+  | "ELEMENTAL_MASTERY";
+
 export type CurvePropertyType =
   | "FIGHT_PROP_BASE_HP"
   | "FIGHT_PROP_BASE_DEFENSE"
   | "FIGHT_PROP_BASE_ATTACK"
+  | "FIGHT_PROP_CRITICAL"
   | "FIGHT_PROP_CRITICAL_HURT"
+  | "FIGHT_PROP_CHARGE_EFFICIENCY"
+  | "FIGHT_PROP_ELEMENT_MASTERY"
   | string;
 
 type GrowthCurveType =
@@ -16,7 +28,7 @@ type GrowthCurveType =
 export type SkillDepotMap = Record<number, AvatarSkillDepot>;
 export type AvatarTalentMap = Record<number, AvatarTalent>;
 export type AvatarSkillMap = Record<number, AvatarSkill>;
-export type AvatarAscensionMap = Record<number, AvatarAscensionList>;
+export type AscensionMap = Record<number, AscensionList>;
 export type CurveLevelMap = Record<number, CurveLevel>;
 export type MaterialMap = Record<number, MaterialData>;
 export type RewardMap = Record<number, RewardData>;
@@ -132,12 +144,12 @@ type AvatarPromoteExcelConfigData = {
   }[];
 };
 
-export type AvatarAscensionList = {
+export type AscensionList = {
   id: number;
-  ascensions: Record<number, AvatarAscension>;
+  ascensions: Record<number, AscensionData>;
 };
 
-type AvatarAscension = {
+type AscensionData = {
   id: number;
   level: number;
   requiredLevel: number;
@@ -190,7 +202,7 @@ export type AvatarData = {
   powers: AvatarSkillDepot;
   ascension: {
     rewards: Record<number, RewardData>; // TODO: Make these type alises
-    levels: AvatarAscensionList;
+    levels: AscensionList;
   };
   stats: {
     base: Record<StatType, number>;
@@ -307,7 +319,7 @@ export type WeaponExcelConfigData = {
   WeaponBaseExp: number;
   NameTextMapHash: number;
   DescTextMapHash: number;
-  WeaponPromoteId: number; // TODO
+  WeaponPromoteId: number;
   WeaponProp: {
     PropType: string;
     InitValue: number;
@@ -323,11 +335,28 @@ export type WeaponData = {
   baseExperience: number;
   name: string;
   description: string;
-  properties: Record<
+  ascensions: AscensionList;
+  stats: Record<
     CurvePropertyType,
     {
       value: number;
       curve: Record<number, CurveInfo>;
     }
   >;
+};
+
+export type WeaponPromoteExcelConfigData = {
+  WeaponPromoteId: number;
+  PromoteLevel: number;
+  UnlockMaxLevel: number;
+  RequiredPlayerLevel: number;
+  CoinCost: number;
+  CostItems: {
+    Id: number;
+    Count: number;
+  }[];
+  AddProps: {
+    PropType: string;
+    Value: number;
+  }[];
 };

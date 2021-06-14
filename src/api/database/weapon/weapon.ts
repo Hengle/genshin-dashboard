@@ -2,6 +2,7 @@ import { fetchTextMap } from "@/api/database/text";
 import { fetchData } from "@/api/database/api";
 import { fetchCurve } from "@/api/database/curve";
 import {
+  AscensionMap,
   CurveLevelMap,
   TextMap,
   WeaponData,
@@ -9,10 +10,12 @@ import {
   WeaponMap,
 } from "@/types/database";
 import _ from "lodash";
+import { fetchWeaponAscensions } from "@/api/database/weapon/ascend";
 
 export async function fetchWeapons(
   text?: TextMap,
   curves?: CurveLevelMap,
+  ascensions?: AscensionMap,
 ): Promise<WeaponMap> {
   const data: WeaponExcelConfigData[] = await fetchData(
     "ExcelBinOutput/WeaponExcelConfigData",
@@ -20,6 +23,7 @@ export async function fetchWeapons(
 
   const textMap = text ?? (await fetchTextMap());
   const curveMap = curves ?? (await fetchCurve("WeaponCurveExcelConfigData"));
+  const ascensionMap = ascensions ?? (await fetchWeaponAscensions());
 
   return _.chain(data)
     .keyBy("Id")
@@ -32,7 +36,8 @@ export async function fetchWeapons(
         baseExperience: data.WeaponBaseExp,
         stars: data.RankLevel,
         type: data.WeaponType,
-        properties: _.chain(data.WeaponProp)
+        ascensions: ascensionMap[data.WeaponPromoteId],
+        stats: _.chain(data.WeaponProp)
           .filter((data) => !!data.PropType)
           .keyBy("PropType")
           .mapValues((data) => ({

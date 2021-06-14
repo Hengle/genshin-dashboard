@@ -2,7 +2,7 @@ import { fetchTextMap } from "@/api/database/text";
 import { fetchData } from "@/api/database/api";
 import { fetchCurve } from "@/api/database/curve";
 import {
-  AvatarAscensionMap,
+  AscensionMap,
   CurveLevel,
   CurveLevelMap,
   AvatarData,
@@ -26,7 +26,7 @@ export async function fetchAvatars(
   curves?: CurveLevelMap,
   material?: MaterialMap,
   reward?: RewardMap,
-  ascensions?: AvatarAscensionMap,
+  ascensions?: AscensionMap,
   skillDepot?: SkillDepotMap,
 ): Promise<AvatarMap> {
   const data: AvatarExcelConfigData[] = await fetchData(
@@ -55,9 +55,13 @@ export async function fetchAvatars(
         stats: {
           base: {
             HP: data.HpBase,
-            ATK: data.AttackBase,
-            DEF: data.DefenseBase,
-            STA: data.StaminaRecoverSpeed,
+            ATTACK: data.AttackBase,
+            DEFENCE: data.DefenseBase,
+            STAMINA: data.StaminaRecoverSpeed,
+            ELEMENTAL_MASTERY: 0,
+            CRITICAL_RATE: 0,
+            CRITICAL_DAMAGE: 0,
+            CHARGE_EFFICIENCY: 0,
           },
           curves: _.chain(Object.values(curveMap))
             .keyBy("level")

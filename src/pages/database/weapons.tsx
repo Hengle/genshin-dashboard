@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
 import { QuestionOutlined, StarFilled } from "@ant-design/icons";
 import FallbackImage from "@/components/image";
-import { WeaponData } from "@/types/database";
+import { StatType, WeaponData } from "@/types/database";
 import { fetchWeapons } from "@/api/database/weapon/weapon";
+import { calculateWeaponStat } from "@/util/avatar";
+import { InputNumber } from "antd";
 
 const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
   {
@@ -76,9 +78,18 @@ const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
 const Weapons = ({
   weapons,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [level, setLevel] = useState(1);
+  const [ascension, setAscension] = useState(1);
+
   return (
     <div>
       <h1>Database: Weapons</h1>
+      <InputNumber min={1} max={90} onChange={(level) => setLevel(level)} />
+      <InputNumber
+        min={1}
+        max={6}
+        onChange={(ascension) => setAscension(ascension)}
+      />
       <ModularTable
         columns={getColumns(weapons)}
         dataSource={weapons}
@@ -88,6 +99,26 @@ const Weapons = ({
             <div className="expanded-row">
               <b>Description</b>
               <p>{record.description}</p>
+
+              {(
+                [
+                  "HP",
+                  "ATTACK",
+                  "DEFENCE",
+                  "STAMINA",
+                  "CRITICAL_RATE",
+                  "CRITICAL_DAMAGE",
+                  "CHARGE_EFFICIENCY",
+                  "ELEMENTAL_MASTERY",
+                ] as StatType[]
+              ).map((element) => (
+                <>
+                  <b>{element}</b>
+                  <p>
+                    {calculateWeaponStat(record, element, level, ascension)}
+                  </p>
+                </>
+              ))}
             </div>
           ),
         }}

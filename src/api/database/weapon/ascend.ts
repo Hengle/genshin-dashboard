@@ -4,33 +4,33 @@ import {
   AscensionData,
   AscensionList,
   AscensionMap,
-  AvatarPromoteExcelConfigData,
   MaterialMap,
+  WeaponPromoteExcelConfigData,
 } from "@/types/database";
 import _ from "lodash";
 
-export async function fetchAvatarAscensions(
+export async function fetchWeaponAscensions(
   material?: MaterialMap,
 ): Promise<AscensionMap> {
-  const data: AvatarPromoteExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/AvatarPromoteExcelConfigData",
+  const data: WeaponPromoteExcelConfigData[] = await fetchData(
+    "ExcelBinOutput/WeaponPromoteExcelConfigData",
   );
 
   const materialMap = material ?? (await fetchMaterials());
 
   return _.chain(data)
-    .groupBy((data) => data.AvatarPromoteId ?? 0)
+    .groupBy((data) => data.WeaponPromoteId ?? 0)
     .map(
       (data, key): AscensionList => ({
         id: parseInt(key),
         ascensions: _.chain(data)
           .mapValues(
             (data): AscensionData => ({
-              id: data.AvatarPromoteId ?? 0,
+              id: data.WeaponPromoteId ?? 0,
               level: data.PromoteLevel ?? 0,
               requiredLevel: data.RequiredPlayerLevel ?? 0,
               cost: {
-                coins: data.ScoinCost ?? 0,
+                coins: data.CoinCost ?? 0,
                 items: data.CostItems.map((item) => ({
                   item: materialMap[item.Id],
                   amount: item.Count,

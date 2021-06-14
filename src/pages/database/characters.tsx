@@ -12,7 +12,7 @@ import {
   Typography,
 } from "antd";
 import { CharacterCard, characters } from "@/assets/database/characters";
-import { calculateStat, getElement } from "@/util/avatar";
+import { calculateAvatarStat, getElement } from "@/util/avatar";
 import { StarFilled } from "@ant-design/icons";
 import { StatType } from "@/types/database";
 import _ from "lodash";
@@ -50,10 +50,12 @@ const CharacterComponent = ({
         <Card>
           <Card.Meta title="Base Stats" />
           <Row>
-            {(["HP", "ATK", "DEF", "STA"] as StatType[]).map((v) => (
+            {(["HP", "ATTACK", "DEFENCE", "STAMINA"] as StatType[]).map((v) => (
               <Col span={4} key={v}>
                 <Typography.Text>
-                  {v}: {calculateStat(character.data, v, level, ascension)}
+                  {/* TODO: Add stat calculation for weapons */}
+                  {v}:{" "}
+                  {calculateAvatarStat(character.data, v, level, ascension)}
                 </Typography.Text>
               </Col>
             ))}
