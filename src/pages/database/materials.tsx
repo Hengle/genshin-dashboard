@@ -5,6 +5,7 @@ import { QuestionOutlined, StarFilled } from "@ant-design/icons";
 import FallbackImage from "@/components/image";
 import { fetchMaterials } from "@/api/database/material";
 import { MaterialData } from "@/types/database";
+import Seo from "@/components/seo";
 
 const getColumns = (
   materials: MaterialData[],
@@ -80,6 +81,7 @@ const Materials = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
+      <Seo title="Materials" />
       <h1>Database: Materials</h1>
       <p>
         <b>NOTE</b>: Some items may be unavailable in game.

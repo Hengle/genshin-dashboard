@@ -7,6 +7,7 @@ import { StatType, WeaponData } from "@/types/database";
 import { fetchWeapons } from "@/api/database/weapon/weapon";
 import { calculateWeaponStat } from "@/util/avatar";
 import { InputNumber } from "antd";
+import Seo from "@/components/seo";
 
 const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
   {
@@ -83,6 +84,7 @@ const Weapons = ({
 
   return (
     <div>
+      <Seo title="Weapons" />
       <h1>Database: Weapons</h1>
       <InputNumber min={1} max={90} onChange={(level) => setLevel(level)} />
       <InputNumber

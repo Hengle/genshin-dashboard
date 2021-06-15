@@ -32,6 +32,7 @@ import {
   GiSwordWound,
 } from "react-icons/gi";
 import { formatMap, propertyMap, statMap } from "@/util/mappings";
+import Seo from "@/components/seo";
 
 type CharacterCardProps = {
   character: CharacterCard;
@@ -131,6 +132,7 @@ const CharacterComponent = ({
 
   return (
     <div>
+      <Seo title="Characters" />
       <Row gutter={[8, 0]} wrap={false}>
         <Col span={6}>
           <Card cover={<img alt="" src={character.assets.card} />}>
@@ -226,7 +228,10 @@ const Characters = ({
             <Button
               onClick={() => setAscended(!ascended)}
               type={ascended ? "primary" : "default"}
-              disabled={ascension?.rewards.unlockLevel !== level}
+              disabled={
+                ascension?.rewards.unlockLevel !== level ||
+                ascension.level == getMaxAscension(user.data.ascension.levels)
+              }
             >
               Ascended
             </Button>

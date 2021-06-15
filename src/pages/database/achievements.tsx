@@ -3,6 +3,7 @@ import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
 import { fetchAchievements } from "@/api/database/achievement";
 import { Achievement } from "@/types/database";
+import Seo from "@/components/seo";
 
 const getColumns = (
   achievements: Achievement[],
@@ -58,6 +59,7 @@ const Achievements = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
+      <Seo title="Achievements" />
       <h1>Database: Achievement</h1>
       <ModularTable
         columns={getColumns(achievements)}
