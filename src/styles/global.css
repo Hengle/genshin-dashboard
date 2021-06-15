@@ -23,3 +23,8 @@
 .expanded-row > p {
     margin-bottom: 0;
 }
+
+.vertical-align > .ant-space-item {
+    display: inline-flex;
+    align-items: center;
+}

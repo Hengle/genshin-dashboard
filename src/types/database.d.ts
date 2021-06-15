@@ -1,13 +1,9 @@
+import { statTypes } from "@/types/consts";
+
 export type CharacterKey = "amber" | string;
-export type StatType =
-  | "HP"
-  | "ATTACK"
-  | "DEFENCE"
-  | "STAMINA"
-  | "CRITICAL_RATE"
-  | "CRITICAL_DAMAGE"
-  | "CHARGE_EFFICIENCY"
-  | "ELEMENTAL_MASTERY";
+export type StatType = typeof statTypes[number];
+
+export type PropertyFormat = "NUMBER" | "PERCENTAGE";
 
 export type CurvePropertyType =
   | "FIGHT_PROP_BASE_HP"
@@ -17,6 +13,17 @@ export type CurvePropertyType =
   | "FIGHT_PROP_CRITICAL_HURT"
   | "FIGHT_PROP_CHARGE_EFFICIENCY"
   | "FIGHT_PROP_ELEMENT_MASTERY"
+  | "FIGHT_PROP_ATTACK_PERCENT"
+  | "FIGHT_PROP_PHYSICAL_ADD_HURT"
+  | "FIGHT_PROP_ELEC_ADD_HURT"
+  | "FIGHT_PROP_ICE_ADD_HURT"
+  | "FIGHT_PROP_WIND_ADD_HURT"
+  | "FIGHT_PROP_WATER_ADD_HURT"
+  | "FIGHT_PROP_FIRE_ADD_HURT"
+  | "FIGHT_PROP_ROCK_ADD_HURT"
+  | "FIGHT_PROP_HEAL_ADD"
+  | "FIGHT_PROP_HP_PERCENT"
+  | "FIGHT_PROP_DEFENSE_PERCENT"
   | string;
 
 type GrowthCurveType =

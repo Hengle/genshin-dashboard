@@ -12,10 +12,26 @@ import {
   Typography,
 } from "antd";
 import { CharacterCard, characters } from "@/assets/database/characters";
-import { calculateAvatarStat, getElement } from "@/util/avatar";
-import { StarFilled } from "@ant-design/icons";
-import { StatType } from "@/types/database";
+import {
+  calculateAvatarStat,
+  getAscensionSpecialStats,
+  getElement,
+  getMaxAscension,
+} from "@/util/avatar";
+import { HeartFilled, StarFilled } from "@ant-design/icons";
+import { CurvePropertyType, StatType } from "@/types/database";
 import _ from "lodash";
+import {
+  GiBroadsword,
+  GiFairyWand,
+  GiPowerLightning,
+  GiRoundStar,
+  GiRun,
+  GiShield,
+  GiSparkSpirit,
+  GiSwordWound,
+} from "react-icons/gi";
+import { formatMap, propertyMap, statMap } from "@/util/mappings";
 
 type CharacterCardProps = {
   character: CharacterCard;
@@ -23,48 +39,157 @@ type CharacterCardProps = {
   ascension: number;
 };
 
+type ElementProps = {
+  type: StatType | CurvePropertyType | string;
+  icon: JSX.Element;
+  value: number;
+  bonus?: number;
+};
+
+const elements: {
+  type: StatType;
+  icon: JSX.Element;
+  base?: number;
+}[] = [
+  {
+    type: "HP",
+    icon: <HeartFilled />,
+  },
+  {
+    type: "ATTACK",
+    icon: <GiBroadsword />,
+  },
+  {
+    type: "DEFENCE",
+    icon: <GiShield />,
+  },
+  {
+    type: "ELEMENTAL_MASTERY",
+    icon: <GiFairyWand />,
+  },
+  {
+    type: "CRITICAL_RATE",
+    base: 0.05,
+    icon: <GiSparkSpirit />,
+  },
+  {
+    type: "CRITICAL_DAMAGE",
+    base: 0.5,
+    icon: <GiSwordWound />,
+  },
+  {
+    type: "STAMINA",
+    base: 75,
+    icon: <GiRun />,
+  },
+  {
+    type: "ENERGY_RECHARGE",
+    base: 1,
+    icon: <GiPowerLightning />,
+  },
+];
+
+const CharacterElementComponent = ({
+  icon,
+  type,
+  value,
+  bonus,
+}: ElementProps) => {
+  const data = statMap[type] ?? propertyMap[type];
+  return (
+    <>
+      <Space align="center" className="vertical-align">
+        {icon}
+        <Typography.Text>{data?.name ?? type}</Typography.Text>
+      </Space>
+      <Typography.Text style={{ float: "right" }}>
+        {formatMap[data?.format]?.(value) ?? value}
+        {bonus && (
+          <Typography.Text style={{ color: "green" }}>
+            {" "}
+            + {formatMap[data?.format]?.(value) ?? value}
+          </Typography.Text>
+        )}
+      </Typography.Text>
+    </>
+  );
+};
+
 const CharacterComponent = ({
   character,
   level,
   ascension,
-}: CharacterCardProps) => (
-  <div>
-    <Row gutter={[8, 0]}>
-      <Col span={6}>
-        <Card cover={<img alt="" src={character.assets.card} />}>
-          <Card.Meta
-            title={`${character.data.name} (${
-              getElement(character.data) ?? "???"
-            })`}
-            description={
-              <>
-                {Array.from(Array(character.data.stars), (v) => (
-                  <StarFilled key={v} style={{ color: "gold" }} />
-                ))}
-              </>
-            }
-          />
-        </Card>
-      </Col>
-      <Col flex="auto">
-        <Card>
-          <Card.Meta title="Base Stats" />
-          <Row>
-            {(["HP", "ATTACK", "DEFENCE", "STAMINA"] as StatType[]).map((v) => (
-              <Col span={4} key={v}>
-                <Typography.Text>
-                  {/* TODO: Add stat calculation for weapons */}
-                  {v}:{" "}
-                  {calculateAvatarStat(character.data, v, level, ascension)}
-                </Typography.Text>
-              </Col>
-            ))}
-          </Row>
-        </Card>
-      </Col>
-    </Row>
-  </div>
-);
+}: CharacterCardProps) => {
+  const special = _.keyBy(
+    getAscensionSpecialStats(
+      character.data.ascension.levels.ascensions[
+        Math.min(getMaxAscension(character.data.ascension.levels), ascension)
+      ],
+    ),
+    "type",
+  );
+
+  return (
+    <div>
+      <Row gutter={[8, 0]} wrap={false}>
+        <Col span={6}>
+          <Card cover={<img alt="" src={character.assets.card} />}>
+            <Card.Meta
+              title={`${character.data.name} (${
+                getElement(character.data) ?? "???"
+              })`}
+              description={
+                <>
+                  {Array.from(Array(character.data.stars), (v) => (
+                    <StarFilled key={v} style={{ color: "gold" }} />
+                  ))}
+                </>
+              }
+            />
+          </Card>
+        </Col>
+        <Col flex="auto">
+          <Card>
+            <Card.Meta title="Base Stats" />
+            <Row gutter={6}>
+              {elements.map((element) => {
+                const property = statMap[element.type]?.property ?? "";
+                const bonus = special[property]?.value;
+                const stat =
+                  calculateAvatarStat(
+                    character.data,
+                    element.type,
+                    level,
+                    ascension,
+                  ) + (element.base ?? 0);
+
+                if (bonus) delete special[property];
+                return (
+                  <Col span={6} key={element.type}>
+                    <CharacterElementComponent
+                      {...element}
+                      value={stat}
+                      bonus={bonus}
+                    />
+                  </Col>
+                );
+              })}
+              {Object.values(special).map((stat) => (
+                <Col span={6} key={stat.type}>
+                  <CharacterElementComponent
+                    type={stat.type}
+                    icon={<GiRoundStar />}
+                    value={stat.value}
+                  />
+                </Col>
+              ))}
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
 const Characters = ({
   characters: chars,

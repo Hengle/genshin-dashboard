@@ -61,7 +61,7 @@ export async function fetchAvatars(
             ELEMENTAL_MASTERY: 0,
             CRITICAL_RATE: 0,
             CRITICAL_DAMAGE: 0,
-            CHARGE_EFFICIENCY: 0,
+            ENERGY_RECHARGE: 0,
           },
           curves: _.chain(Object.values(curveMap))
             .keyBy("level")
