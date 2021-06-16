@@ -1,18 +1,31 @@
-import { fetchData } from "@/api/database/api";
 import _ from "lodash";
 import {
-  CurveLevel,
   CurveExcelConfigData,
   CurveInfo,
+  CurveLevel,
   CurveLevelMap,
 } from "@/types/database";
 
-export async function fetchCurve(path: string): Promise<CurveLevelMap> {
-  const data: CurveExcelConfigData[] = await fetchData(
-    `ExcelBinOutput/${path}`,
+export const fetchAvatarCurve = async () =>
+  fetchCurve(
+    (
+      await import(
+        "../../external/GenshinData/ExcelBinOutput/AvatarCurveExcelConfigData.json"
+      )
+    ).default as CurveExcelConfigData[],
   );
 
-  return _.chain(data)
+export const fetchWeaponCurve = async () =>
+  fetchCurve(
+    (
+      await import(
+        "../../external/GenshinData/ExcelBinOutput/WeaponCurveExcelConfigData.json"
+      )
+    ).default as CurveExcelConfigData[],
+  );
+
+const fetchCurve = (data: CurveExcelConfigData[]): CurveLevelMap =>
+  _.chain(data)
     .keyBy((data) => data.Level ?? 0)
     .mapValues(
       (data): CurveLevel => ({
@@ -29,4 +42,3 @@ export async function fetchCurve(path: string): Promise<CurveLevelMap> {
       }),
     )
     .value();
-}

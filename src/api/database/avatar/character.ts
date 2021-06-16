@@ -1,13 +1,12 @@
 import { fetchTextMap } from "@/api/database/text";
-import { fetchData } from "@/api/database/api";
-import { fetchCurve } from "@/api/database/curve";
+import { fetchAvatarCurve } from "@/api/database/curve";
 import {
   AscensionMap,
-  CurveLevel,
-  CurveLevelMap,
   AvatarData,
   AvatarExcelConfigData,
   AvatarMap,
+  CurveLevel,
+  CurveLevelMap,
   MaterialMap,
   RewardMap,
   SkillDepotMap,
@@ -29,12 +28,14 @@ export async function fetchAvatars(
   ascensions?: AscensionMap,
   skillDepot?: SkillDepotMap,
 ): Promise<AvatarMap> {
-  const data: AvatarExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/AvatarExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../../external/GenshinData/ExcelBinOutput/AvatarExcelConfigData.json"
+    )
+  ).default as AvatarExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
-  const curveMap = curves ?? (await fetchCurve("AvatarCurveExcelConfigData"));
+  const curveMap = curves ?? (await fetchAvatarCurve());
   const materialMap = material ?? (await fetchMaterials(textMap));
   const rewardMap = reward ?? (await fetchRewards(materialMap));
   const ascensionMap = ascensions ?? (await fetchAvatarAscensions(materialMap));

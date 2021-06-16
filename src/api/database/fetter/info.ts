@@ -4,14 +4,15 @@ import {
   FetterInfoMap,
   TextMap,
 } from "@/types/database";
-import { fetchData } from "@/api/database/api";
 import { fetchTextMap } from "@/api/database/text";
 import _ from "lodash";
 
 export async function fetchFetterInfo(text?: TextMap): Promise<FetterInfoMap> {
-  const data: FetterInfoExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/FetterInfoExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../../external/GenshinData/ExcelBinOutput/FetterInfoExcelConfigData.json"
+    )
+  ).default as FetterInfoExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
 

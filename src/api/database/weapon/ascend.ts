@@ -1,4 +1,3 @@
-import { fetchData } from "@/api/database/api";
 import { fetchMaterials } from "@/api/database/material";
 import {
   AscensionData,
@@ -12,9 +11,11 @@ import _ from "lodash";
 export async function fetchWeaponAscensions(
   material?: MaterialMap,
 ): Promise<AscensionMap> {
-  const data: WeaponPromoteExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/WeaponPromoteExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../../external/GenshinData/ExcelBinOutput/WeaponPromoteExcelConfigData.json"
+    )
+  ).default as WeaponPromoteExcelConfigData[];
 
   const materialMap = material ?? (await fetchMaterials());
 

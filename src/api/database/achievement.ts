@@ -1,7 +1,6 @@
 import { fetchRewards } from "@/api/database/reward";
 import { fetchMaterials } from "@/api/database/material";
 import { fetchTextMap } from "@/api/database/text";
-import { fetchData } from "@/api/database/api";
 import {
   Achievement,
   AchievementCategory,
@@ -41,14 +40,16 @@ export async function fetchAchievements(
   materials?: MaterialMap,
   categories?: AchievementCategoryMap,
 ): Promise<AchievementMap> {
-  const data: AchievementExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/AchievementExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../external/GenshinData/ExcelBinOutput/AchievementExcelConfigData.json"
+    )
+  ).default as AchievementExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
-  const rewardMap = rewards ?? (await fetchRewards());
-  const materialMap = materials ?? (await fetchMaterials());
+  const materialMap = materials ?? (await fetchMaterials(textMap));
   const categoryMap = categories ?? (await fetchAchievementCategories(textMap));
+  const rewardMap = rewards ?? (await fetchRewards(materialMap));
 
   return _.chain(data)
     .keyBy((data) => data.Id ?? 0)
@@ -76,9 +77,12 @@ export async function fetchAchievements(
 export async function fetchAchievementCategories(
   text?: TextMap,
 ): Promise<AchievementCategoryMap> {
-  const data: AchievementGoalExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/AchievementGoalExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../external/GenshinData/ExcelBinOutput/AchievementGoalExcelConfigData.json"
+    )
+  ).default as AchievementGoalExcelConfigData[];
+
   const textMap = text ?? (await fetchTextMap());
 
   return _.chain(data)

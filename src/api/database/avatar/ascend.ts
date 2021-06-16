@@ -1,4 +1,3 @@
-import { fetchData } from "@/api/database/api";
 import { fetchMaterials } from "@/api/database/material";
 import {
   AscensionData,
@@ -9,12 +8,15 @@ import {
 } from "@/types/database";
 import _ from "lodash";
 
+// TODO: Merge with weapon ascension code
 export async function fetchAvatarAscensions(
   material?: MaterialMap,
 ): Promise<AscensionMap> {
-  const data: AvatarPromoteExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/AvatarPromoteExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../../external/GenshinData/ExcelBinOutput/AvatarPromoteExcelConfigData.json"
+    )
+  ).default as AvatarPromoteExcelConfigData[];
 
   const materialMap = material ?? (await fetchMaterials());
 

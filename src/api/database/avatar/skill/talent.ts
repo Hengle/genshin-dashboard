@@ -1,4 +1,3 @@
-import { fetchData } from "@/api/database/api";
 import {
   AvatarTalent,
   AvatarTalentExcelConfigData,
@@ -14,9 +13,11 @@ export async function fetchTalents(
   text?: TextMap,
   material?: MaterialMap,
 ): Promise<AvatarTalentMap> {
-  const data: AvatarTalentExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/AvatarTalentExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../../../external/GenshinData/ExcelBinOutput/AvatarTalentExcelConfigData.json"
+    )
+  ).default as AvatarTalentExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
   const materialMap = material ?? (await fetchMaterials(textMap));

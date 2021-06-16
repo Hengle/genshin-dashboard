@@ -1,11 +1,11 @@
 import React from "react";
-import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
 import { QuestionOutlined, StarFilled } from "@ant-design/icons";
 import FallbackImage from "@/components/image";
-import { fetchMaterials } from "@/api/database/material";
 import { MaterialData } from "@/types/database";
 import Seo from "@/components/seo";
+import { fetchMaterials } from "@/api/database/material";
+import { InferGetStaticPropsType } from "next";
 
 const getColumns = (
   materials: MaterialData[],
@@ -18,6 +18,7 @@ const getColumns = (
         ""
       ) : (
         <FallbackImage
+          key={record.id}
           src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${encodeURIComponent(
             record.icon ?? "",
           )}.png`}
@@ -78,42 +79,40 @@ const getColumns = (
 
 const Materials = ({
   materials,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return (
-    <div>
-      <Seo title="Materials" />
-      <h1>Database: Materials</h1>
-      <p>
-        <b>NOTE</b>: Some items may be unavailable in game.
-      </p>
-      <ModularTable
-        columns={getColumns(materials)}
-        dataSource={materials}
-        size="middle"
-        expandable={{
-          expandedRowRender: (record) => (
-            <div className="expanded-row">
-              <b>Description</b>
-              <p>{record.description}</p>
+}: InferGetStaticPropsType<typeof getStaticProps>) => (
+  <div>
+    <Seo title="Materials" />
+    <h1>Database: Materials</h1>
+    <p>
+      <b>NOTE</b>: Some items may be unavailable in game.
+    </p>
+    <ModularTable
+      dataSource={materials}
+      columns={getColumns(materials)}
+      size="middle"
+      expandable={{
+        expandedRowRender: (record) => (
+          <div className="expanded-row">
+            <b>Description</b>
+            <p>{record.description}</p>
 
-              {record.effectDescription.length > 0 && (
-                <div>
-                  <b>Effects</b>
-                  <p>{record.effectDescription}</p>
-                </div>
-              )}
-            </div>
-          ),
-        }}
-      />
-    </div>
-  );
-};
+            {record.effectDescription.length > 0 && (
+              <div>
+                <b>Effects</b>
+                <p>{record.effectDescription}</p>
+              </div>
+            )}
+          </div>
+        ),
+      }}
+    />
+  </div>
+);
 
 export const getStaticProps = async () => ({
   props: {
     materials: Object.values(await fetchMaterials())
-      .filter((v) => v.type.length > 0)
+      .filter((v) => v.name.length > 0)
       .map((v) => ({
         ...v,
         key: v.id,

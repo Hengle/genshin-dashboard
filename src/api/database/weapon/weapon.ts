@@ -1,6 +1,5 @@
 import { fetchTextMap } from "@/api/database/text";
-import { fetchData } from "@/api/database/api";
-import { fetchCurve } from "@/api/database/curve";
+import { fetchWeaponCurve } from "@/api/database/curve";
 import {
   AscensionMap,
   CurveLevelMap,
@@ -17,12 +16,14 @@ export async function fetchWeapons(
   curves?: CurveLevelMap,
   ascensions?: AscensionMap,
 ): Promise<WeaponMap> {
-  const data: WeaponExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/WeaponExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../../external/GenshinData/ExcelBinOutput/WeaponExcelConfigData.json"
+    )
+  ).default as WeaponExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
-  const curveMap = curves ?? (await fetchCurve("WeaponCurveExcelConfigData"));
+  const curveMap = curves ?? (await fetchWeaponCurve());
   const ascensionMap = ascensions ?? (await fetchWeaponAscensions());
 
   return _.chain(data)

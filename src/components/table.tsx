@@ -4,6 +4,7 @@ import { Button, Input, Space, Table, TableProps } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { DataIndex } from "rc-table/lib/interface";
+import { UseQuery } from "@/components/hooks";
 
 interface Column<RecordType> extends ColumnType<RecordType> {
   searchable?: boolean;
@@ -21,6 +22,12 @@ export type ModularColumns<RecordType = unknown> = (
 
 interface Props<RecordType> extends TableProps<RecordType> {
   columns?: ModularColumns<RecordType>;
+  query?: {
+    columns?: (data: RecordType[]) => ModularColumns<RecordType>;
+    endpoint: string;
+    total?: number;
+    key: string;
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -30,6 +37,7 @@ export class ModularTable<RecordType extends object> extends React.Component<
   state = {
     searchText: "",
     searchedColumn: "",
+    page: 1,
   };
 
   getColumnSearchProps = (column: Column<RecordType>): Column<RecordType> => {
@@ -116,18 +124,73 @@ export class ModularTable<RecordType extends object> extends React.Component<
     this.setState({ searchText: "" });
   };
 
+  getColumns = (columns: ModularColumns<RecordType>) =>
+    columns.map((v) => {
+      if (v.searchable !== true) return v;
+      return { ...v, ...this.getColumnSearchProps(v) };
+    }) ?? [];
+
   render() {
-    const columns: ModularColumns<RecordType> =
-      this.props.columns?.map((v) => {
-        if (v.searchable !== true) return v;
-        return { ...v, ...this.getColumnSearchProps(v) };
-      }) ?? [];
+    if (this.props.query) {
+      return (
+        <UseQuery
+          options={{
+            queryFn: async () => {
+              const response = await fetch(
+                `/api${this.props.query?.endpoint ?? ""}?perPage=${10}&page=${
+                  this.state.page
+                }`,
+              );
+
+              if (response.ok) return await response.json();
+              else throw new Error("Failed to fetch");
+            },
+            keepPreviousData: true,
+            refetchOnWindowFocus: false,
+            queryKey: [this.props.query?.endpoint ?? "", this.state.page, 10],
+          }}
+        >
+          {(result) => {
+            const {
+              elements,
+              total,
+            }: { elements: RecordType[]; total: number } = (result?.data ??
+              {}) as never;
+
+            const data = result.error
+              ? []
+              : ((elements ?? []) as RecordType[]).map((data) => ({
+                  ...data,
+                  key: data[(this.props.query?.key ?? "id") as never],
+                }));
+
+            const columns =
+              this.props.query?.columns?.(result.isFetching ? [] : data) ??
+              this.props.columns ??
+              [];
+
+            return (
+              <Table
+                {...this.props}
+                scroll={{ x: "max-content" }}
+                columns={this.getColumns(columns)}
+                dataSource={data}
+                pagination={{
+                  onChange: (page) => this.setState({ page }),
+                  total: total ?? this.props.query?.total ?? 0,
+                }}
+              />
+            );
+          }}
+        </UseQuery>
+      );
+    }
 
     return (
       <Table
         {...this.props}
         scroll={{ x: "max-content" }}
-        columns={columns as never}
+        columns={this.getColumns(this.props.columns ?? [])}
       />
     );
   }

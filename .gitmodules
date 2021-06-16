@@ -1,0 +1,3 @@
+[submodule "src/external/GenshinData"]
+	path = src/external/GenshinData
+	url = https://github.com/Dimbreath/GenshinData.git

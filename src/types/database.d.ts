@@ -178,9 +178,9 @@ type AvatarExcelConfigData = {
   IconName: string;
   SideIconName: string;
   QualityType: string;
-  InitialWeapon: string;
-  DescTextMapHash: string;
-  InfoDescTextMapHash: string;
+  InitialWeapon: number;
+  DescTextMapHash: number;
+  InfoDescTextMapHash: number;
   HpBase: number;
   AttackBase: number;
   DefenseBase: number;

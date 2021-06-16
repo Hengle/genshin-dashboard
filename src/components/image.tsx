@@ -12,19 +12,16 @@ interface Props {
 
 const FallbackImage = ({ src, children, attributes }: Props) => {
   const [failed, setFailed] = useState(false);
+  if (failed) return children ?? <></>;
 
-  if (!failed)
-    return (
-      <img
-        {...(attributes ?? {})}
-        src={src}
-        alt=""
-        onError={() => setFailed(true)}
-      />
-    );
-
-  if (children === undefined) return <span />;
-  return children;
+  return (
+    <img
+      {...(attributes ?? {})}
+      src={src}
+      alt=""
+      onError={() => setFailed(true)}
+    />
+  );
 };
 
 export default FallbackImage;

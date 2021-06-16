@@ -1,4 +1,3 @@
-import { fetchData } from "@/api/database/api";
 import {
   AvatarSkillDepot,
   AvatarSkillDepotExcelConfigData,
@@ -14,9 +13,11 @@ export async function fetchSkillDepot(
   skill?: AvatarSkillMap,
   talent?: AvatarTalentMap,
 ): Promise<SkillDepotMap> {
-  const data: AvatarSkillDepotExcelConfigData[] = await fetchData(
-    "ExcelBinOutput/AvatarSkillDepotExcelConfigData",
-  );
+  const data = (
+    await import(
+      "../../../../external/GenshinData/ExcelBinOutput/AvatarSkillDepotExcelConfigData.json"
+    )
+  ).default as AvatarSkillDepotExcelConfigData[];
 
   const skillMap = skill ?? (await fetchSkills());
   const talentMap = talent ?? (await fetchTalents());

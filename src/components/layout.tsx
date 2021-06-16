@@ -4,6 +4,7 @@ import { Content, Footer, Header } from "antd/lib/layout/layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import _ from "lodash";
+import { useIsClient } from "@/components/hooks";
 
 const links = {
   Home: "/",
@@ -30,28 +31,31 @@ type Props = {
 
 const LayoutComponent = ({ children }: Props) => {
   const router = useRouter();
+  const isClient = useIsClient();
 
   return (
     <Layout className="layout">
       <Header>
         <b className="logo">Genshin Dashboard</b>
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["home"]}>
-          {Object.entries(links).map(([name, destination]) =>
-            typeof destination === "string" ? (
-              <Menu.Item key={destination}>
-                <Link href={destination}>{name}</Link>
-              </Menu.Item>
-            ) : (
-              <Menu.SubMenu title={name} key={name}>
-                {Object.entries(destination).map(([name, destination]) => (
-                  <Menu.Item key={destination}>
-                    <Link href={destination}>{name}</Link>
-                  </Menu.Item>
-                ))}
-              </Menu.SubMenu>
-            ),
-          )}
-        </Menu>
+        {isClient && (
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["home"]}>
+            {Object.entries(links).map(([name, destination]) =>
+              typeof destination === "string" ? (
+                <Menu.Item key={destination}>
+                  <Link href={destination}>{name}</Link>
+                </Menu.Item>
+              ) : (
+                <Menu.SubMenu title={name} key={name}>
+                  {Object.entries(destination).map(([name, destination]) => (
+                    <Menu.Item key={destination}>
+                      <Link href={destination}>{name}</Link>
+                    </Menu.Item>
+                  ))}
+                </Menu.SubMenu>
+              ),
+            )}
+          </Menu>
+        )}
       </Header>
       <Content className="content">
         <div className="main">
