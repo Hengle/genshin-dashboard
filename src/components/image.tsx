@@ -1,26 +1,21 @@
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
+import Image, { ImageProps } from "next/image";
 
-interface Props {
-  src: string;
-  children?: JSX.Element;
-  attributes?: React.DetailedHTMLProps<
-    React.ImgHTMLAttributes<HTMLImageElement>,
-    HTMLImageElement
-  >;
-}
-
-const FallbackImage = ({ src, children, attributes }: Props) => {
-  const [failed, setFailed] = useState(false);
-  if (failed) return children ?? <></>;
-
+const FallbackImage = (
+  props: ImageProps & { fallback: React.ReactElement },
+) => {
+  const [loaded, setLoaded] = useState(false);
   return (
-    <img
-      {...(attributes ?? {})}
-      src={src}
-      alt=""
-      onError={() => setFailed(true)}
-    />
+    <div style={{ width: props.width, height: props.height }}>
+      <Image
+        {...props}
+        onLoad={() => {
+          console.log("loaded");
+          setLoaded(true);
+        }}
+      />
+      {!loaded && props.fallback}
+    </div>
   );
 };
 

@@ -1,11 +1,11 @@
 import React from "react";
 import { ModularColumns, ModularTable } from "@/components/table";
-import { QuestionOutlined, StarFilled } from "@ant-design/icons";
-import FallbackImage from "@/components/image";
+import { StarFilled } from "@ant-design/icons";
 import { MaterialData } from "@/types/database";
 import Seo from "@/components/seo";
 import { fetchMaterials } from "@/api/database/material";
 import { InferGetStaticPropsType } from "next";
+import Image from "next/image";
 
 const getColumns = (
   materials: MaterialData[],
@@ -17,15 +17,13 @@ const getColumns = (
       record.icon?.length === 0 ? (
         ""
       ) : (
-        <FallbackImage
-          key={record.id}
+        <Image
           src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${encodeURIComponent(
             record.icon ?? "",
           )}.png`}
-          attributes={{ width: "100%" }}
-        >
-          <QuestionOutlined style={{ textAlign: "center", width: "100%" }} />
-        </FallbackImage>
+          width={50}
+          height={50}
+        />
       ),
   },
   {

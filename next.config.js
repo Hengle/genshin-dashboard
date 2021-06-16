@@ -4,4 +4,8 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-module.exports = withPlugins([withBundleAnalyzer, withImages]);
+module.exports = withPlugins([withBundleAnalyzer, withImages], {
+  images: {
+    domains: ["upload-os-bbs.mihoyo.com"],
+  },
+});

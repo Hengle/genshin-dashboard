@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
-import { QuestionOutlined, StarFilled } from "@ant-design/icons";
-import FallbackImage from "@/components/image";
+import { StarFilled } from "@ant-design/icons";
 import { StatType, WeaponData } from "@/types/database";
 import { fetchWeapons } from "@/api/database/weapon/weapon";
 import { calculateWeaponStat } from "@/util/avatar";
 import { InputNumber } from "antd";
 import Seo from "@/components/seo";
+import Image from "next/image";
 
 const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
   {
@@ -17,14 +17,13 @@ const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
       record.icon?.length === 0 ? (
         ""
       ) : (
-        <FallbackImage
+        <Image
           src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${encodeURIComponent(
             record.icon ?? "",
           )}.png`}
-          attributes={{ width: "100%" }}
-        >
-          <QuestionOutlined style={{ textAlign: "center", width: "100%" }} />
-        </FallbackImage>
+          width={50}
+          height={50}
+        />
       ),
   },
   {
