@@ -4,10 +4,9 @@ import { ModularColumns, ModularTable } from "@/components/table";
 import { fetchAchievements } from "@/api/database/achievement";
 import { Achievement } from "@/types/database";
 import Seo from "@/components/seo";
+import { achievementStringifier } from "@/assets/localization/localization";
 
-const getColumns = (
-  achievements: Achievement[],
-): ModularColumns<Achievement> => [
+const getColumns = (achievements: Achievement[]): ModularColumns<Achievement> => [
   {
     key: "name",
     title: "Name",
@@ -26,37 +25,16 @@ const getColumns = (
     render: (_, record) => <>{record.category.name}</>,
     filters: [...new Set(achievements.map((v) => v.category.name))]
       .filter((v) => v.length > 0)
-      .map((v) => {
-        return {
-          value: v,
-          text: v,
-        };
-      }),
+      .map((v) => ({
+        value: v,
+        text: v,
+      })),
     onFilter: (value, record) =>
       typeof value === "string" ? record.category.name === value : false,
   },
 ];
 
-const achievementStringifier: Record<
-  string,
-  (achievement: Achievement) => string
-> = {
-  OBTAIN_MATERIAL: (achievement) =>
-    `Obtain ${achievement.progress} of the following materials:\n${(
-      achievement.trigger.items?.map((v) => v.name) ?? []
-    ).join(", ")}`,
-  FORGE_WEAPON: (achievement) =>
-    `Forge ${achievement.progress} weapons of ${
-      achievement.trigger.stars ?? 0
-    } stars.`,
-  UNLOCK_RECIPES: (achievement) => `Unlock ${achievement.progress} recipes.`,
-  MASTER_RECIPES: (achievement) =>
-    `Unlock auto-cook on ${achievement.progress} recipes.`,
-};
-
-const Achievements = ({
-  achievements,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Achievements = ({ achievements }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
       <Seo title="Achievements" />
@@ -82,9 +60,7 @@ const Achievements = ({
 
               <b>Rewards</b>
               <p>
-                {record.reward.items
-                  .map((item) => `${item.amount}x ${item.item.name}`)
-                  .join(", ")}
+                {record.reward.items.map((item) => `${item.amount}x ${item.item.name}`).join(", ")}
               </p>
             </div>
           ),

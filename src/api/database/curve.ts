@@ -4,24 +4,19 @@ import {
   CurveInfo,
   CurveLevel,
   CurveLevelMap,
+  CurveOperationType,
 } from "@/types/database";
 
 export const fetchAvatarCurve = async () =>
   fetchCurve(
-    (
-      await import(
-        "../../external/GenshinData/ExcelBinOutput/AvatarCurveExcelConfigData.json"
-      )
-    ).default as CurveExcelConfigData[],
+    (await import("../../external/GenshinData/ExcelBinOutput/AvatarCurveExcelConfigData.json"))
+      .default as CurveExcelConfigData[],
   );
 
 export const fetchWeaponCurve = async () =>
   fetchCurve(
-    (
-      await import(
-        "../../external/GenshinData/ExcelBinOutput/WeaponCurveExcelConfigData.json"
-      )
-    ).default as CurveExcelConfigData[],
+    (await import("../../external/GenshinData/ExcelBinOutput/WeaponCurveExcelConfigData.json"))
+      .default as CurveExcelConfigData[],
   );
 
 const fetchCurve = (data: CurveExcelConfigData[]): CurveLevelMap =>
@@ -34,7 +29,7 @@ const fetchCurve = (data: CurveExcelConfigData[]): CurveLevelMap =>
           .keyBy("Type")
           .mapValues(
             (data): CurveInfo => ({
-              operation: data.Arith,
+              operation: data.Arith as CurveOperationType,
               value: data.Value,
             }),
           )

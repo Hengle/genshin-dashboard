@@ -26,4 +26,5 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default MyApp;

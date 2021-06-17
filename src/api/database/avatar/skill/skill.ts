@@ -1,17 +1,10 @@
-import {
-  AvatarSkill,
-  AvatarSkillExcelConfigData,
-  AvatarSkillMap,
-  TextMap,
-} from "@/types/database";
+import { AvatarSkill, AvatarSkillExcelConfigData, AvatarSkillMap, TextMap } from "@/types/database";
 import { fetchTextMap } from "@/api/database/text";
 import _ from "lodash";
 
 export async function fetchSkills(text?: TextMap): Promise<AvatarSkillMap> {
   const data = (
-    await import(
-      "../../../../external/GenshinData/ExcelBinOutput/AvatarSkillExcelConfigData.json"
-    )
+    await import("../../../../external/GenshinData/ExcelBinOutput/AvatarSkillExcelConfigData.json")
   ).default as AvatarSkillExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());

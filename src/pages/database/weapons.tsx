@@ -7,7 +7,7 @@ import { fetchWeapons } from "@/api/database/weapon/weapon";
 import { calculateWeaponStat } from "@/util/avatar";
 import { InputNumber } from "antd";
 import Seo from "@/components/seo";
-import Image from "next/image";
+import ProxiedImage from "@/components/proxy";
 
 const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
   {
@@ -17,10 +17,8 @@ const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
       record.icon?.length === 0 ? (
         ""
       ) : (
-        <Image
-          src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${encodeURIComponent(
-            record.icon ?? "",
-          )}.png`}
+        <ProxiedImage
+          src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${record.icon}.png`}
           width={50}
           height={50}
         />
@@ -61,23 +59,19 @@ const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
           text: v,
         };
       }),
-    onFilter: (value, record) =>
-      typeof value === "string" ? record.type === value : false,
+    onFilter: (value, record) => (typeof value === "string" ? record.type === value : false),
   },
   {
     key: "id",
     title: "ID",
     dataIndex: "id",
     searchable: true,
-    onFilter: (value, record) =>
-      typeof value === "number" ? record.id === value : false,
+    onFilter: (value, record) => (typeof value === "number" ? record.id === value : false),
     sorter: (a, b) => a.stars - b.stars,
   },
 ];
 
-const Weapons = ({
-  weapons,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Weapons = ({ weapons }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [level, setLevel] = useState(1);
   const [ascension, setAscension] = useState(1);
 
@@ -86,11 +80,7 @@ const Weapons = ({
       <Seo title="Weapons" />
       <h1>Database: Weapons</h1>
       <InputNumber min={1} max={90} onChange={(level) => setLevel(level)} />
-      <InputNumber
-        min={1}
-        max={6}
-        onChange={(ascension) => setAscension(ascension)}
-      />
+      <InputNumber min={1} max={6} onChange={(ascension) => setAscension(ascension)} />
       <ModularTable
         columns={getColumns(weapons)}
         dataSource={weapons}
@@ -115,9 +105,7 @@ const Weapons = ({
               ).map((element) => (
                 <>
                   <b>{element}</b>
-                  <p>
-                    {calculateWeaponStat(record, element, level, ascension)}
-                  </p>
+                  <p>{calculateWeaponStat(record, element, level, ascension)}</p>
                 </>
               ))}
             </div>

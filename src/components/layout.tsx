@@ -72,9 +72,7 @@ const LayoutComponent = ({ children }: Props) => {
       <Footer style={{ textAlign: "center" }}>
         Koding Dev © {new Date().getFullYear()}
         <br />
-        <span style={{ color: "gray" }}>
-          We are not affiliated with Genshin Impact or MiHoYo.
-        </span>
+        <span style={{ color: "gray" }}>We are not affiliated with Genshin Impact or MiHoYo.</span>
       </Footer>
     </Layout>
   );

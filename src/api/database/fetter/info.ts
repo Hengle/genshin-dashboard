@@ -1,4 +1,5 @@
 import {
+  AssociationType,
   FetterInfo,
   FetterInfoExcelConfigData,
   FetterInfoMap,
@@ -9,9 +10,7 @@ import _ from "lodash";
 
 export async function fetchFetterInfo(text?: TextMap): Promise<FetterInfoMap> {
   const data = (
-    await import(
-      "../../../external/GenshinData/ExcelBinOutput/FetterInfoExcelConfigData.json"
-    )
+    await import("../../../external/GenshinData/ExcelBinOutput/FetterInfoExcelConfigData.json")
   ).default as FetterInfoExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
@@ -25,7 +24,7 @@ export async function fetchFetterInfo(text?: TextMap): Promise<FetterInfoMap> {
         region: textMap[data.AvatarNativeTextMapHash],
         constellation: textMap[data.AvatarConstellationBeforTextMapHash],
         element: textMap[data.AvatarVisionBeforTextMapHash],
-        association: data.AvatarAssocType,
+        association: data.AvatarAssocType as AssociationType,
       }),
     )
     .value();

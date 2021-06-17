@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { fetchAvatars } from "@/api/database/avatar/character";
-import {
-  Button,
-  Card,
-  Col,
-  InputNumber,
-  Row,
-  Select,
-  Space,
-  Typography,
-} from "antd";
+import { Button, Card, Col, InputNumber, Row, Select, Space, Typography } from "antd";
 import { CharacterCard, characters } from "@/assets/database/characters";
 import {
   calculateAvatarStat,
@@ -90,12 +81,7 @@ const elements: {
   },
 ];
 
-const CharacterElementComponent = ({
-  icon,
-  type,
-  value,
-  bonus,
-}: ElementProps) => {
+const CharacterElementComponent = ({ icon, type, value, bonus }: ElementProps) => {
   const data = statMap[type] ?? propertyMap[type];
   return (
     <>
@@ -116,11 +102,7 @@ const CharacterElementComponent = ({
   );
 };
 
-const CharacterComponent = ({
-  character,
-  level,
-  ascension,
-}: CharacterCardProps) => {
+const CharacterComponent = ({ character, level, ascension }: CharacterCardProps) => {
   const special = _.keyBy(
     getAscensionSpecialStats(
       character.data.ascension.levels.ascensions[
@@ -137,9 +119,7 @@ const CharacterComponent = ({
         <Col span={6}>
           <Card cover={<img alt="" src={character.assets.card} />}>
             <Card.Meta
-              title={`${character.data.name} (${
-                getElement(character.data) ?? "???"
-              })`}
+              title={`${character.data.name} (${getElement(character.data) ?? "???"})`}
               description={
                 <>
                   {Array.from(Array(character.data.stars), (v) => (
@@ -158,21 +138,13 @@ const CharacterComponent = ({
                 const property = statMap[element.type]?.property ?? "";
                 const bonus = special[property]?.value;
                 const stat =
-                  calculateAvatarStat(
-                    character.data,
-                    element.type,
-                    level,
-                    ascension,
-                  ) + (element.base ?? 0);
+                  calculateAvatarStat(character.data, element.type, level, ascension) +
+                  (element.base ?? 0);
 
                 if (bonus) delete special[property];
                 return (
                   <Col span={6} key={element.type}>
-                    <CharacterElementComponent
-                      {...element}
-                      value={stat}
-                      bonus={bonus}
-                    />
+                    <CharacterElementComponent {...element} value={stat} bonus={bonus} />
                   </Col>
                 );
               })}
@@ -193,9 +165,7 @@ const CharacterComponent = ({
   );
 };
 
-const Characters = ({
-  characters: chars,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Characters = ({ characters: chars }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [character, setCharacter] = useState(chars[0].name);
   const entry = chars.find((v) => v.name === character) ?? chars[0];
   const user = characters[character.toLowerCase()]?.(entry) ?? {
@@ -267,9 +237,7 @@ const Characters = ({
         character={user}
         ascension={
           (ascension?.level ?? 0) +
-          (ascended || (ascension && ascension?.rewards.unlockLevel !== level)
-            ? 1
-            : 0)
+          (ascended || (ascension && ascension?.rewards.unlockLevel !== level) ? 1 : 0)
         }
         level={level}
       />

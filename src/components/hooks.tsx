@@ -6,10 +6,8 @@ type UseQueryProps = {
   options: UseQueryOptions;
 };
 
-export const UseQuery: FunctionComponent<UseQueryProps> = ({
-  children,
-  options,
-}) => children(useQuery(options));
+export const UseQuery: FunctionComponent<UseQueryProps> = ({ children, options }) =>
+  children(useQuery(options));
 
 export const useIsClient = () => {
   const [isClient, setIsClient] = React.useState(false);

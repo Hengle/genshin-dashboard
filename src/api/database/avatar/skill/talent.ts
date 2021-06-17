@@ -14,9 +14,7 @@ export async function fetchTalents(
   material?: MaterialMap,
 ): Promise<AvatarTalentMap> {
   const data = (
-    await import(
-      "../../../../external/GenshinData/ExcelBinOutput/AvatarTalentExcelConfigData.json"
-    )
+    await import("../../../../external/GenshinData/ExcelBinOutput/AvatarTalentExcelConfigData.json")
   ).default as AvatarTalentExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());

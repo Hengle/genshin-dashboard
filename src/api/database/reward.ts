@@ -1,19 +1,10 @@
 import { fetchMaterials } from "@/api/database/material";
-import {
-  MaterialMap,
-  RewardData,
-  RewardExcelConfigData,
-  RewardMap,
-} from "@/types/database";
+import { MaterialMap, RewardData, RewardExcelConfigData, RewardMap } from "@/types/database";
 import _ from "lodash";
 
-export async function fetchRewards(
-  materials?: MaterialMap,
-): Promise<RewardMap> {
+export async function fetchRewards(materials?: MaterialMap): Promise<RewardMap> {
   const data = (
-    await import(
-      "../../external/GenshinData/ExcelBinOutput/RewardExcelConfigData.json"
-    )
+    await import("../../external/GenshinData/ExcelBinOutput/RewardExcelConfigData.json")
   ).default as RewardExcelConfigData[];
 
   const materialMap = materials ?? (await fetchMaterials());

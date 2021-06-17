@@ -32,6 +32,15 @@ type GrowthCurveType =
   | "GROW_CURVE_HP_S5"
   | "GROW_CURVE_ATTACK_S5";
 
+type AssociationType =
+  | "ASSOC_TYPE_MONDSTADT"
+  | "ASSOC_TYPE_LIYUE"
+  | "ASSOC_TYPE_INAZUMA"
+  | "ASSOC_TYPE_MAINACTOR"
+  | "ASSOC_TYPE_FATUI";
+
+type CurveOperationType = "ARITH_MULTI";
+
 export type SkillDepotMap = Record<number, AvatarSkillDepot>;
 export type AvatarTalentMap = Record<number, AvatarTalent>;
 export type AvatarSkillMap = Record<number, AvatarSkill>;
@@ -58,12 +67,12 @@ export type FetterInfoExcelConfigData = {
 };
 
 export type FetterInfo = {
-  region: string;
-  element: string; // TODO: Typealias
-  constellation: string;
   title: string;
   description: string;
-  association: string;
+  region: string;
+  element: string; // TODO: Typealias but future
+  constellation: string;
+  association: AssociationType;
 };
 
 type AvatarSkillDepotExcelConfigData = {
@@ -232,7 +241,7 @@ type CurveLevel = {
 };
 
 export type CurveInfo = {
-  operation: "ARITH_MULTI" | string;
+  operation: CurveOperationType;
   value: number;
 };
 

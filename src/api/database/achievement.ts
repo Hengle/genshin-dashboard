@@ -41,9 +41,7 @@ export async function fetchAchievements(
   categories?: AchievementCategoryMap,
 ): Promise<AchievementMap> {
   const data = (
-    await import(
-      "../../external/GenshinData/ExcelBinOutput/AchievementExcelConfigData.json"
-    )
+    await import("../../external/GenshinData/ExcelBinOutput/AchievementExcelConfigData.json")
   ).default as AchievementExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
@@ -74,13 +72,9 @@ export async function fetchAchievements(
     .value();
 }
 
-export async function fetchAchievementCategories(
-  text?: TextMap,
-): Promise<AchievementCategoryMap> {
+export async function fetchAchievementCategories(text?: TextMap): Promise<AchievementCategoryMap> {
   const data = (
-    await import(
-      "../../external/GenshinData/ExcelBinOutput/AchievementGoalExcelConfigData.json"
-    )
+    await import("../../external/GenshinData/ExcelBinOutput/AchievementGoalExcelConfigData.json")
   ).default as AchievementGoalExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());

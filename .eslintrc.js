@@ -8,7 +8,7 @@ module.exports = {
     ecmaVersion: 8,
   },
   ignorePatterns: ["node_modules/*", ".next/*"],
-  extends: ["eslint:recommended"],
+  extends: ["eslint:recommended", "prettier"],
   overrides: [
     {
       files: ["**/*.ts", "**/*.tsx"],

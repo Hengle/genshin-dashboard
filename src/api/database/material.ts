@@ -1,17 +1,10 @@
 import { fetchTextMap } from "@/api/database/text";
-import {
-  MaterialData,
-  MaterialExcelConfigData,
-  MaterialMap,
-  TextMap,
-} from "@/types/database";
+import { MaterialData, MaterialExcelConfigData, MaterialMap, TextMap } from "@/types/database";
 import _ from "lodash";
 
 export async function fetchMaterials(text?: TextMap): Promise<MaterialMap> {
   const data = (
-    await import(
-      "../../external/GenshinData/ExcelBinOutput/MaterialExcelConfigData.json"
-    )
+    await import("../../external/GenshinData/ExcelBinOutput/MaterialExcelConfigData.json")
   ).default as MaterialExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());

@@ -8,4 +8,7 @@ module.exports = withPlugins([withBundleAnalyzer, withImages], {
   images: {
     domains: ["upload-os-bbs.mihoyo.com"],
   },
+  serverRuntimeConfig: {
+    PROJECT_ROOT: __dirname,
+  },
 });

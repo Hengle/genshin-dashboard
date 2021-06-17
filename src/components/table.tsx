@@ -10,15 +10,11 @@ interface Column<RecordType> extends ColumnType<RecordType> {
   searchable?: boolean;
 }
 
-export interface ColumnGroup<RecordType>
-  extends Omit<Column<RecordType>, "dataIndex"> {
+export interface ColumnGroup<RecordType> extends Omit<Column<RecordType>, "dataIndex"> {
   children: Column<RecordType>;
 }
 
-export type ModularColumns<RecordType = unknown> = (
-  | ColumnGroup<RecordType>
-  | Column<RecordType>
-)[];
+export type ModularColumns<RecordType = unknown> = (ColumnGroup<RecordType> | Column<RecordType>)[];
 
 interface Props<RecordType> extends TableProps<RecordType> {
   columns?: ModularColumns<RecordType>;
@@ -31,9 +27,7 @@ interface Props<RecordType> extends TableProps<RecordType> {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export class ModularTable<RecordType extends object> extends React.Component<
-  Props<RecordType>
-> {
+export class ModularTable<RecordType extends object> extends React.Component<Props<RecordType>> {
   state = {
     searchText: "",
     searchedColumn: "",
@@ -44,12 +38,7 @@ export class ModularTable<RecordType extends object> extends React.Component<
     let searchInput: Input | null;
 
     return {
-      filterDropdown: ({
-        setSelectedKeys,
-        selectedKeys,
-        confirm,
-        clearFilters,
-      }) => (
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
           <Input
             ref={(node) => {
@@ -57,20 +46,14 @@ export class ModularTable<RecordType extends object> extends React.Component<
             }}
             placeholder={`Search ${column.dataIndex}`}
             value={selectedKeys[0]}
-            onChange={(e) =>
-              setSelectedKeys(e.target.value ? [e.target.value] : [])
-            }
-            onPressEnter={() =>
-              this.handleSearch(selectedKeys, confirm, column.dataIndex)
-            }
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => this.handleSearch(selectedKeys, confirm, column.dataIndex)}
             style={{ marginBottom: 8, display: "block" }}
           />
           <Space>
             <Button
               type="primary"
-              onClick={() =>
-                this.handleSearch(selectedKeys, confirm, column.dataIndex)
-              }
+              onClick={() => this.handleSearch(selectedKeys, confirm, column.dataIndex)}
               icon={<SearchOutlined />}
               size="small"
               style={{ width: 90 }}
@@ -137,9 +120,7 @@ export class ModularTable<RecordType extends object> extends React.Component<
           options={{
             queryFn: async () => {
               const response = await fetch(
-                `/api${this.props.query?.endpoint ?? ""}?perPage=${10}&page=${
-                  this.state.page
-                }`,
+                `/api${this.props.query?.endpoint ?? ""}?perPage=${10}&page=${this.state.page}`,
               );
 
               if (response.ok) return await response.json();
@@ -151,10 +132,7 @@ export class ModularTable<RecordType extends object> extends React.Component<
           }}
         >
           {(result) => {
-            const {
-              elements,
-              total,
-            }: { elements: RecordType[]; total: number } = (result?.data ??
+            const { elements, total }: { elements: RecordType[]; total: number } = (result?.data ??
               {}) as never;
 
             const data = result.error

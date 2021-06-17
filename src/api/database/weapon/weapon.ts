@@ -17,9 +17,7 @@ export async function fetchWeapons(
   ascensions?: AscensionMap,
 ): Promise<WeaponMap> {
   const data = (
-    await import(
-      "../../../external/GenshinData/ExcelBinOutput/WeaponExcelConfigData.json"
-    )
+    await import("../../../external/GenshinData/ExcelBinOutput/WeaponExcelConfigData.json")
   ).default as WeaponExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());

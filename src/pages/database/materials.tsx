@@ -5,11 +5,9 @@ import { MaterialData } from "@/types/database";
 import Seo from "@/components/seo";
 import { fetchMaterials } from "@/api/database/material";
 import { InferGetStaticPropsType } from "next";
-import Image from "next/image";
+import ProxiedImage from "@/components/proxy";
 
-const getColumns = (
-  materials: MaterialData[],
-): ModularColumns<MaterialData> => [
+const getColumns = (materials: MaterialData[]): ModularColumns<MaterialData> => [
   {
     title: "Image",
     width: 10,
@@ -17,10 +15,8 @@ const getColumns = (
       record.icon?.length === 0 ? (
         ""
       ) : (
-        <Image
-          src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${encodeURIComponent(
-            record.icon ?? "",
-          )}.png`}
+        <ProxiedImage
+          src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${record.icon}.png`}
           width={50}
           height={50}
         />
@@ -61,23 +57,19 @@ const getColumns = (
           text: v,
         };
       }),
-    onFilter: (value, record) =>
-      typeof value === "string" ? record.type === value : false,
+    onFilter: (value, record) => (typeof value === "string" ? record.type === value : false),
   },
   {
     key: "id",
     title: "ID",
     dataIndex: "id",
     searchable: true,
-    onFilter: (value, record) =>
-      typeof value === "number" ? record.id === value : false,
+    onFilter: (value, record) => (typeof value === "number" ? record.id === value : false),
     sorter: (a, b) => a.stars - b.stars,
   },
 ];
 
-const Materials = ({
-  materials,
-}: InferGetStaticPropsType<typeof getStaticProps>) => (
+const Materials = ({ materials }: InferGetStaticPropsType<typeof getStaticProps>) => (
   <div>
     <Seo title="Materials" />
     <h1>Database: Materials</h1>

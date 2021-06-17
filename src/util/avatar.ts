@@ -23,13 +23,9 @@ export const calculateAvatarStat = (
   if (curve?.operation === "ARITH_MULTI") result *= curve?.value ?? 1;
 
   if (property) {
-    const avatarAscension =
-      data.ascension.levels.ascensions[
-        Math.min(ascension, getMaxAscension(data.ascension.levels))
-      ];
-
-    if (avatarAscension)
-      result += avatarAscension.rewards.properties[property] ?? 0;
+    const index = Math.min(ascension, getMaxAscension(data.ascension.levels));
+    const avatarAscension = data.ascension.levels.ascensions[index];
+    if (avatarAscension) result += avatarAscension.rewards.properties[property] ?? 0;
   }
 
   return Math.round(result);
@@ -62,19 +58,11 @@ export const calculateWeaponStat = (
 
   if (property) {
     const ascensionData =
-      data.ascensions.ascensions[
-        Math.min(
-          ascension,
-          _.last(Object.values(data.ascensions.ascensions))?.level ?? 1,
-        )
-      ];
-
-    if (ascensionData)
-      result += ascensionData.rewards.properties[property] ?? 0;
+      data.ascensions.ascensions[Math.min(ascension, getMaxAscension(data.ascensions) ?? 1)];
+    if (ascensionData) result += ascensionData.rewards.properties[property] ?? 0;
   }
 
   return Math.round(result);
 };
 
-export const getElement = (data: AvatarData) =>
-  data.powers.skills.energy?.cost.element?.type;
+export const getElement = (data: AvatarData) => data.powers.skills.energy?.cost.element?.type;

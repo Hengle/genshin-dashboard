@@ -29,9 +29,7 @@ export async function fetchAvatars(
   skillDepot?: SkillDepotMap,
 ): Promise<AvatarMap> {
   const data = (
-    await import(
-      "../../../external/GenshinData/ExcelBinOutput/AvatarExcelConfigData.json"
-    )
+    await import("../../../external/GenshinData/ExcelBinOutput/AvatarExcelConfigData.json")
   ).default as AvatarExcelConfigData[];
 
   const textMap = text ?? (await fetchTextMap());
@@ -71,9 +69,7 @@ export async function fetchAvatars(
                 level: curve.level,
                 info: _.chain(data.PropGrowCurves)
                   .keyBy("Type")
-                  .mapValues(
-                    (entry) => curveMap[curve.level].info[entry.GrowCurve],
-                  )
+                  .mapValues((entry) => curveMap[curve.level].info[entry.GrowCurve])
                   .value(),
               }),
             )
@@ -82,10 +78,7 @@ export async function fetchAvatars(
         ascension: {
           levels: ascensionMap[data.AvatarPromoteId],
           rewards: _.chain(data.AvatarPromoteRewardIdList)
-            .map((id, index) => [
-              data.AvatarPromoteRewardLevelList[index],
-              rewardMap[id],
-            ])
+            .map((id, index) => [data.AvatarPromoteRewardLevelList[index], rewardMap[id]])
             .fromPairs()
             .value(),
         },
