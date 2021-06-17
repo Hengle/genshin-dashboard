@@ -5,7 +5,7 @@ import { MaterialData } from "@/types/database";
 import Seo from "@/components/seo";
 import { fetchMaterials } from "@/api/database/material";
 import { InferGetStaticPropsType } from "next";
-import ProxiedImage from "@/components/proxy";
+import Image from "next/image";
 
 const getColumns = (materials: MaterialData[]): ModularColumns<MaterialData> => [
   {
@@ -15,7 +15,7 @@ const getColumns = (materials: MaterialData[]): ModularColumns<MaterialData> => 
       record.icon?.length === 0 ? (
         ""
       ) : (
-        <ProxiedImage
+        <Image
           src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${record.icon}.png`}
           width={50}
           height={50}

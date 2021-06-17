@@ -7,7 +7,7 @@ import { fetchWeapons } from "@/api/database/weapon/weapon";
 import { calculateWeaponStat } from "@/util/avatar";
 import { InputNumber } from "antd";
 import Seo from "@/components/seo";
-import ProxiedImage from "@/components/proxy";
+import Image from "next/image";
 
 const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
   {
@@ -17,7 +17,7 @@ const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
       record.icon?.length === 0 ? (
         ""
       ) : (
-        <ProxiedImage
+        <Image
           src={`https://upload-os-bbs.mihoyo.com/game_record/genshin/equip/${record.icon}.png`}
           width={50}
           height={50}
