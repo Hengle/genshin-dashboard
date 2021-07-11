@@ -5,9 +5,9 @@ import { StarFilled } from "@ant-design/icons";
 import { StatType, WeaponData } from "@/types/database";
 import { fetchWeapons } from "@/api/database/weapon/weapon";
 import { calculateWeaponStat } from "@/util/avatar";
-import { InputNumber } from "antd";
 import Seo from "@/components/seo";
 import Image from "next/image";
+import LevelSelector from "@/components/levels";
 
 const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
   {
@@ -72,15 +72,13 @@ const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
 ];
 
 const Weapons = ({ weapons }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [level, setLevel] = useState(1);
-  const [ascension, setAscension] = useState(1);
+  const [stats, setStats] = useState({ level: 1, ascension: 0 });
 
   return (
     <div>
       <Seo title="Weapons" />
       <h1>Database: Weapons</h1>
-      <InputNumber min={1} max={90} onChange={(level) => setLevel(level)} />
-      <InputNumber min={1} max={6} onChange={(ascension) => setAscension(ascension)} />
+      <LevelSelector stats={[stats, setStats]} ascensions={weapons[0].ascensions} />
       <ModularTable
         columns={getColumns(weapons)}
         dataSource={weapons}
@@ -105,7 +103,7 @@ const Weapons = ({ weapons }: InferGetStaticPropsType<typeof getStaticProps>) =>
               ).map((element) => (
                 <>
                   <b>{element}</b>
-                  <p>{calculateWeaponStat(record, element, level, ascension)}</p>
+                  <p>{calculateWeaponStat(record, element, stats.level, stats.ascension)}</p>
                 </>
               ))}
             </div>

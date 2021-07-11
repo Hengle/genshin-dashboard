@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { fetchAvatars } from "@/api/database/avatar/character";
-import { Button, Card, Col, InputNumber, Row, Select, Space, Typography } from "antd";
-import { CharacterCard, characters } from "@/assets/database/characters";
+import { Card, Col, Row, Select, Space, Typography } from "antd";
+import { CharacterCard, characters as db } from "@/assets/database/characters";
 import {
   calculateAvatarStat,
+  calculateWeaponStat,
   getAscensionSpecialStats,
   getElement,
   getMaxAscension,
 } from "@/util/avatar";
 import { HeartFilled, StarFilled } from "@ant-design/icons";
-import { CurvePropertyType, StatType } from "@/types/database";
+import { CurvePropertyType, StatType, WeaponData } from "@/types/database";
 import _ from "lodash";
 import {
   GiBroadsword,
@@ -24,11 +25,14 @@ import {
 } from "react-icons/gi";
 import { formatMap, propertyMap, statMap } from "@/util/mappings";
 import Seo from "@/components/seo";
+import LevelSelector from "@/components/levels";
+import { fetchWeapons } from "@/api/database/weapon/weapon";
 
 type CharacterCardProps = {
   character: CharacterCard;
   level: number;
   ascension: number;
+  weapons: WeaponData[];
 };
 
 type ElementProps = {
@@ -94,7 +98,7 @@ const CharacterElementComponent = ({ icon, type, value, bonus }: ElementProps) =
         {bonus && (
           <Typography.Text style={{ color: "green" }}>
             {" "}
-            + {formatMap[data?.format]?.(value) ?? value}
+            + {formatMap[data?.format]?.(bonus) ?? bonus}
           </Typography.Text>
         )}
       </Typography.Text>
@@ -102,7 +106,18 @@ const CharacterElementComponent = ({ icon, type, value, bonus }: ElementProps) =
   );
 };
 
-const CharacterComponent = ({ character, level, ascension }: CharacterCardProps) => {
+const CharacterComponent = ({
+  character,
+  level,
+  ascension,
+  weapons: baseWeapons,
+}: CharacterCardProps) => {
+  const weapons = baseWeapons.filter((weapon) => weapon.type === character.data.weaponType);
+
+  const [selection, setSelection] = useState(weapons[0].name);
+  const [stats, setStats] = useState({ level: 1, ascension: 0 });
+
+  const weapon = weapons.find((data) => data.name === selection) ?? weapons[0];
   const special = _.keyBy(
     getAscensionSpecialStats(
       character.data.ascension.levels.ascensions[
@@ -122,8 +137,8 @@ const CharacterComponent = ({ character, level, ascension }: CharacterCardProps)
               title={`${character.data.name} (${getElement(character.data) ?? "???"})`}
               description={
                 <>
-                  {Array.from(Array(character.data.stars), (v) => (
-                    <StarFilled key={v} style={{ color: "gold" }} />
+                  {Array.from(Array(character.data.stars), (_, i) => (
+                    <StarFilled key={i} style={{ color: "gold" }} />
                   ))}
                 </>
               }
@@ -139,6 +154,7 @@ const CharacterComponent = ({ character, level, ascension }: CharacterCardProps)
                 const bonus = special[property]?.value;
                 const stat =
                   calculateAvatarStat(character.data, element.type, level, ascension) +
+                  calculateWeaponStat(weapon, element.type, stats.level, stats.ascension) +
                   (element.base ?? 0);
 
                 if (bonus) delete special[property];
@@ -159,27 +175,60 @@ const CharacterComponent = ({ character, level, ascension }: CharacterCardProps)
               ))}
             </Row>
           </Card>
+          <Card>
+            <Card.Meta title="Weapon" />
+            <Select
+              defaultValue={selection}
+              style={{ width: 120 }}
+              showSearch={true}
+              onChange={(query) => setSelection(query)}
+            >
+              {Object.entries(
+                _.chain(weapons)
+                  .groupBy((data) => data.stars)
+                  .value(),
+              )
+                .reverse()
+                .map(([key, weapons]) => (
+                  <Select.OptGroup key={`${key} Star`}>
+                    {weapons.map((weapon) => (
+                      <Select.Option value={weapon.name} key={weapon.id}>
+                        {weapon.name}
+                      </Select.Option>
+                    ))}
+                  </Select.OptGroup>
+                ))}
+            </Select>
+            <LevelSelector ascensions={weapon.ascensions} stats={[stats, setStats]} />
+            <Row gutter={6}>
+              {elements.map((element) => {
+                const stat =
+                  calculateWeaponStat(weapon, element.type, stats.level, stats.ascension) +
+                  (element.base ?? 0);
+
+                return (
+                  <Col span={6} key={element.type}>
+                    <CharacterElementComponent {...element} value={stat} />
+                  </Col>
+                );
+              })}
+            </Row>
+          </Card>
         </Col>
       </Row>
     </div>
   );
 };
 
-const Characters = ({ characters: chars }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [character, setCharacter] = useState(chars[0].name);
-  const entry = chars.find((v) => v.name === character) ?? chars[0];
-  const user = characters[character.toLowerCase()]?.(entry) ?? {
-    data: entry,
+const Characters = ({ characters, weapons }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [selection, setSelection] = useState(characters[0].name);
+  const [stats, setStats] = useState({ level: 1, ascension: 0 });
+
+  const character = characters.find((character) => character.name === selection) ?? characters[0];
+  const card = db[selection.toLowerCase()]?.(character) ?? {
+    data: character,
     assets: {},
   };
-
-  const [level, setLevel] = useState(1);
-  const [ascended, setAscended] = useState(false);
-  const ascension = _.last(
-    Object.values(user.data.ascension.levels.ascensions).filter(
-      (value) => value.rewards.unlockLevel <= level,
-    ),
-  );
 
   return (
     <div>
@@ -187,35 +236,17 @@ const Characters = ({ characters: chars }: InferGetStaticPropsType<typeof getSta
       <Card>
         <Card.Meta title="Controls" />
         <Space direction="vertical">
-          <Space>
-            <Typography.Text>Level</Typography.Text>
-            <InputNumber
-              min={1}
-              max={90}
-              defaultValue={level}
-              onChange={(level) => setLevel(level ?? 1)}
-            />
-            <Button
-              onClick={() => setAscended(!ascended)}
-              type={ascended ? "primary" : "default"}
-              disabled={
-                ascension?.rewards.unlockLevel !== level ||
-                ascension.level == getMaxAscension(user.data.ascension.levels)
-              }
-            >
-              Ascended
-            </Button>
-          </Space>
+          <LevelSelector stats={[stats, setStats]} ascensions={card.data.ascension.levels} />
           <Space>
             <Typography.Text>Character</Typography.Text>
             <Select
-              defaultValue={chars[0].name}
+              defaultValue={selection}
               style={{ width: 120 }}
               showSearch={true}
-              onChange={(v: string) => setCharacter(v)}
+              onChange={(query) => setSelection(query)}
             >
               {Object.entries(
-                _.chain(chars)
+                _.chain(characters)
                   .uniqBy("name")
                   .groupBy((data) => getElement(data) ?? "Other")
                   .value(),
@@ -234,12 +265,10 @@ const Characters = ({ characters: chars }: InferGetStaticPropsType<typeof getSta
       </Card>
       <br />
       <CharacterComponent
-        character={user}
-        ascension={
-          (ascension?.level ?? 0) +
-          (ascended || (ascension && ascension?.rewards.unlockLevel !== level) ? 1 : 0)
-        }
-        level={level}
+        character={card}
+        weapons={weapons}
+        ascension={stats.ascension}
+        level={stats.level}
       />
     </div>
   );
@@ -253,6 +282,7 @@ export const getStaticProps = async () => ({
         ...v,
         key: v.id,
       })),
+    weapons: Object.values(await fetchWeapons()),
   },
 });
 
