@@ -7,12 +7,13 @@
     "dev-inspect": "cross-env NODE_ENV=development NODE_OPTIONS=--inspect next",
     "build": "next build",
     "start": "next start",
+    "compile:test": "tsc",
     "lint:fix": "eslint src --fix",
     "lint:test": "eslint src",
     "prettier:fix": "prettier \"src/**/*.ts(x)?\" --write",
     "prettier:test": "prettier \"src/**/*.ts(x)?\" --list-different",
     "prepare": "husky install",
-    "precommit": "tsc && npm run lint:fix && npm run prettier:fix"
+    "precommit": "npm run compile:test && npm run lint:fix && npm run prettier:fix"
   },
   "dependencies": {
     "@next/bundle-analyzer": "^10.2.3",

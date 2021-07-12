@@ -1,12 +1,8 @@
 import { fetchMaterials } from "@/api/database/material";
-import {
-  AscensionData,
-  AscensionList,
-  AscensionMap,
-  MaterialMap,
-  WeaponPromoteExcelConfigData,
-} from "@/types/database";
 import _ from "lodash";
+import { MaterialMap } from "@/types/database/material";
+import { AscensionData, AscensionList, AscensionMap } from "@/types/database/avatar/ascension";
+import { WeaponPromoteExcelConfigData } from "@/types/database/weapon";
 
 export async function fetchWeaponAscensions(material?: MaterialMap): Promise<AscensionMap> {
   const data = (

@@ -1,6 +1,8 @@
 import { fetchRewards } from "@/api/database/reward";
 import { fetchMaterials } from "@/api/database/material";
 import { fetchTextMap } from "@/api/database/text";
+import _ from "lodash";
+import { MaterialMap } from "@/types/database/material";
 import {
   Achievement,
   AchievementCategory,
@@ -9,11 +11,9 @@ import {
   AchievementGoalExcelConfigData,
   AchievementMap,
   AchievementTrigger,
-  MaterialMap,
-  RewardMap,
-  TextMap,
-} from "@/types/database";
-import _ from "lodash";
+} from "@/types/database/achievement";
+import { TextMap } from "@/types/database/consts";
+import { RewardMap } from "@/types/database/reward";
 
 const achievementTriggerParser: Record<
   string,

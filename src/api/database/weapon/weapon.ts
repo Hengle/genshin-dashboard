@@ -1,15 +1,11 @@
 import { fetchTextMap } from "@/api/database/text";
 import { fetchWeaponCurve } from "@/api/database/curve";
-import {
-  AscensionMap,
-  CurveLevelMap,
-  TextMap,
-  WeaponData,
-  WeaponExcelConfigData,
-  WeaponMap,
-} from "@/types/database";
 import _ from "lodash";
 import { fetchWeaponAscensions } from "@/api/database/weapon/ascend";
+import { TextMap } from "@/types/database/consts";
+import { CurveLevelMap } from "@/types/database/curve";
+import { AscensionMap } from "@/types/database/avatar/ascension";
+import { WeaponData, WeaponExcelConfigData, WeaponMap } from "@/types/database/weapon";
 
 export async function fetchWeapons(
   text?: TextMap,

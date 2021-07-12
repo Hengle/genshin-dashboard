@@ -1,6 +1,11 @@
-import { AvatarSkill, AvatarSkillExcelConfigData, AvatarSkillMap, TextMap } from "@/types/database";
 import { fetchTextMap } from "@/api/database/text";
 import _ from "lodash";
+import {
+  AvatarSkill,
+  AvatarSkillExcelConfigData,
+  AvatarSkillMap,
+} from "@/types/database/avatar/skill";
+import { TextMap } from "@/types/database/consts";
 
 export async function fetchSkills(text?: TextMap): Promise<AvatarSkillMap> {
   const data = (

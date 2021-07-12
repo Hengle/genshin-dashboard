@@ -1,8 +1,8 @@
 import { Button, InputNumber, Space, Typography } from "antd";
 import { getMaxAscension } from "@/util/avatar";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { AscensionList } from "@/types/database";
 import _ from "lodash";
+import { AscensionList } from "@/types/database/avatar/ascension";
 
 type StatsState = {
   level: number;

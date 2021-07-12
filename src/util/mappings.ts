@@ -1,8 +1,8 @@
-import { CurvePropertyType, PropertyFormat, StatType } from "@/types/database";
 import _ from "lodash";
+import { CombatPropertyType, PropertyFormat, StatType } from "@/types/database/consts";
 
 export const combatMap: {
-  property?: CurvePropertyType;
+  property?: CombatPropertyType;
   stat?: StatType;
   format: PropertyFormat;
   name: string;

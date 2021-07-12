@@ -1,11 +1,11 @@
 import React from "react";
 import { ModularColumns, ModularTable } from "@/components/table";
 import { StarFilled } from "@ant-design/icons";
-import { MaterialData } from "@/types/database";
 import Seo from "@/components/seo";
 import { fetchMaterials } from "@/api/database/material";
 import { InferGetStaticPropsType } from "next";
 import Image from "next/image";
+import { MaterialData } from "@/types/database/material";
 
 const getColumns = (materials: MaterialData[]): ModularColumns<MaterialData> => [
   {

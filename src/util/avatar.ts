@@ -1,14 +1,10 @@
-import {
-  AscensionData,
-  AscensionList,
-  AvatarData,
-  CurveInfo,
-  CurvePropertyType,
-  StatType,
-  WeaponData,
-} from "@/types/database";
 import _ from "lodash";
 import { statMap } from "@/util/mappings";
+import { AscensionData, AscensionList } from "@/types/database/avatar/ascension";
+import { CurveInfo } from "@/types/database/curve";
+import { CombatPropertyType, StatType } from "@/types/database/consts";
+import { WeaponData } from "@/types/database/weapon";
+import { AvatarData } from "@/types/database/avatar/avatar";
 
 export const calculateAvatarStat = (
   data: AvatarData,
@@ -38,7 +34,7 @@ export const getAscensionSpecialStats = (levels: AscensionData) =>
   _.chain(Object.entries(levels.rewards.properties))
     .filter(([key, value]) => !key.includes("BASE") && !!value)
     .map(([key, value]) => ({
-      type: key as CurvePropertyType,
+      type: key as CombatPropertyType,
       value: value,
     }))
     .value();

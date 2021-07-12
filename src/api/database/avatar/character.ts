@@ -1,22 +1,17 @@
 import { fetchTextMap } from "@/api/database/text";
 import { fetchAvatarCurve } from "@/api/database/curve";
-import {
-  AscensionMap,
-  AvatarData,
-  AvatarExcelConfigData,
-  AvatarMap,
-  CurveLevel,
-  CurveLevelMap,
-  MaterialMap,
-  RewardMap,
-  SkillDepotMap,
-  TextMap,
-} from "@/types/database";
 import { fetchMaterials } from "@/api/database/material";
 import { fetchRewards } from "@/api/database/reward";
 import { fetchAvatarAscensions } from "@/api/database/avatar/ascend";
 import { fetchSkillDepot } from "@/api/database/avatar/skill/depot";
 import _ from "lodash";
+import { TextMap } from "@/types/database/consts";
+import { CurveLevel, CurveLevelMap } from "@/types/database/curve";
+import { MaterialMap } from "@/types/database/material";
+import { RewardMap } from "@/types/database/reward";
+import { AscensionMap } from "@/types/database/avatar/ascension";
+import { SkillDepotMap } from "@/types/database/avatar/skill";
+import { AvatarData, AvatarExcelConfigData, AvatarMap } from "@/types/database/avatar/avatar";
 
 // TODO:
 // * InitialWeapon

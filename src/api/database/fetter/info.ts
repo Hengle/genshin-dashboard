@@ -1,12 +1,7 @@
-import {
-  AssociationType,
-  FetterInfo,
-  FetterInfoExcelConfigData,
-  FetterInfoMap,
-  TextMap,
-} from "@/types/database";
 import { fetchTextMap } from "@/api/database/text";
 import _ from "lodash";
+import { AssociationType, TextMap } from "@/types/database/consts";
+import { FetterInfo, FetterInfoExcelConfigData, FetterInfoMap } from "@/types/database/fetters";
 
 export async function fetchFetterInfo(text?: TextMap): Promise<FetterInfoMap> {
   const data = (

@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
 import { StarFilled } from "@ant-design/icons";
-import { StatType, WeaponData } from "@/types/database";
 import { fetchWeapons } from "@/api/database/weapon/weapon";
 import { calculateWeaponStat } from "@/util/avatar";
 import Seo from "@/components/seo";
 import Image from "next/image";
 import LevelSelector from "@/components/levels";
+import { WeaponData } from "@/types/database/weapon";
+import { statType } from "@/types/database/consts";
 
 const getColumns = (weapons: WeaponData[]): ModularColumns<WeaponData> => [
   {
@@ -89,18 +90,7 @@ const Weapons = ({ weapons }: InferGetStaticPropsType<typeof getStaticProps>) =>
               <b>Description</b>
               <p>{record.description}</p>
 
-              {(
-                [
-                  "HP",
-                  "ATTACK",
-                  "DEFENCE",
-                  "STAMINA",
-                  "CRITICAL_RATE",
-                  "CRITICAL_DAMAGE",
-                  "CHARGE_EFFICIENCY",
-                  "ELEMENTAL_MASTERY",
-                ] as StatType[]
-              ).map((element) => (
+              {statType.map((element) => (
                 <>
                   <b>{element}</b>
                   <p>{calculateWeaponStat(record, element, stats.level, stats.ascension)}</p>

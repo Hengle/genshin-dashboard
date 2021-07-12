@@ -1,13 +1,13 @@
+import { fetchTextMap } from "@/api/database/text";
+import { fetchMaterials } from "@/api/database/material";
+import _ from "lodash";
+import { TextMap } from "@/types/database/consts";
+import { MaterialMap } from "@/types/database/material";
 import {
   AvatarTalent,
   AvatarTalentExcelConfigData,
   AvatarTalentMap,
-  MaterialMap,
-  TextMap,
-} from "@/types/database";
-import { fetchTextMap } from "@/api/database/text";
-import { fetchMaterials } from "@/api/database/material";
-import _ from "lodash";
+} from "@/types/database/avatar/talent";
 
 export async function fetchTalents(
   text?: TextMap,

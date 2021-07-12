@@ -1,6 +1,7 @@
 import { fetchTextMap } from "@/api/database/text";
-import { MaterialData, MaterialExcelConfigData, MaterialMap, TextMap } from "@/types/database";
 import _ from "lodash";
+import { TextMap } from "@/types/database/consts";
+import { MaterialData, MaterialExcelConfigData, MaterialMap } from "@/types/database/material";
 
 export async function fetchMaterials(text?: TextMap): Promise<MaterialMap> {
   const data = (

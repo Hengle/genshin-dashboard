@@ -1,12 +1,12 @@
 import { fetchMaterials } from "@/api/database/material";
+import _ from "lodash";
+import { MaterialMap } from "@/types/database/material";
 import {
   AscensionData,
   AscensionList,
   AscensionMap,
   AvatarPromoteExcelConfigData,
-  MaterialMap,
-} from "@/types/database";
-import _ from "lodash";
+} from "@/types/database/avatar/ascension";
 
 // TODO: Merge with weapon ascension code
 export async function fetchAvatarAscensions(material?: MaterialMap): Promise<AscensionMap> {

@@ -11,7 +11,6 @@ import {
   getMaxAscension,
 } from "@/util/avatar";
 import { HeartFilled, StarFilled } from "@ant-design/icons";
-import { CurvePropertyType, StatType, WeaponData } from "@/types/database";
 import _ from "lodash";
 import {
   GiBroadsword,
@@ -27,7 +26,10 @@ import { formatMap, propertyMap, statMap } from "@/util/mappings";
 import Seo from "@/components/seo";
 import LevelSelector from "@/components/levels";
 import { fetchWeapons } from "@/api/database/weapon/weapon";
+import { WeaponData } from "@/types/database/weapon";
+import { CombatPropertyType, StatType } from "@/types/database/consts";
 
+// TODO: Fix this mess
 type CharacterCardProps = {
   character: CharacterCard;
   level: number;
@@ -36,7 +38,7 @@ type CharacterCardProps = {
 };
 
 type ElementProps = {
-  type: StatType | CurvePropertyType | string;
+  type: StatType | CombatPropertyType | string;
   icon: JSX.Element;
   value: number;
   bonus?: number;

@@ -1,11 +1,6 @@
 import _ from "lodash";
-import {
-  CurveExcelConfigData,
-  CurveInfo,
-  CurveLevel,
-  CurveLevelMap,
-  CurveOperationType,
-} from "@/types/database";
+import { CurveExcelConfigData, CurveInfo, CurveLevel, CurveLevelMap } from "@/types/database/curve";
+import { CurveOperationType } from "@/types/database/consts";
 
 export const fetchAvatarCurve = async () =>
   fetchCurve(

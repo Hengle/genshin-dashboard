@@ -2,9 +2,9 @@ import React from "react";
 import { InferGetStaticPropsType } from "next";
 import { ModularColumns, ModularTable } from "@/components/table";
 import { fetchAchievements } from "@/api/database/achievement";
-import { Achievement } from "@/types/database";
 import Seo from "@/components/seo";
 import { achievementStringifier } from "@/assets/localization/localization";
+import { Achievement } from "@/types/database/achievement";
 
 const getColumns = (achievements: Achievement[]): ModularColumns<Achievement> => [
   {

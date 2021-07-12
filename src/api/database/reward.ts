@@ -1,6 +1,7 @@
 import { fetchMaterials } from "@/api/database/material";
-import { MaterialMap, RewardData, RewardExcelConfigData, RewardMap } from "@/types/database";
 import _ from "lodash";
+import { MaterialMap } from "@/types/database/material";
+import { RewardData, RewardExcelConfigData, RewardMap } from "@/types/database/reward";
 
 export async function fetchRewards(materials?: MaterialMap): Promise<RewardMap> {
   const data = (

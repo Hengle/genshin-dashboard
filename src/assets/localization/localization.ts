@@ -1,5 +1,6 @@
-import { Achievement } from "@/types/database";
+import { Achievement } from "@/types/database/achievement";
 
+// TODO: Move this out of here
 export const achievementStringifier: Record<string, (achievement: Achievement) => string> = {
   OBTAIN_MATERIAL: (achievement) =>
     `Obtain ${achievement.progress} of the following materials:\n${(

@@ -1,13 +1,13 @@
+import { fetchSkills } from "@/api/database/avatar/skill/skill";
+import { fetchTalents } from "@/api/database/avatar/skill/talent";
+import _ from "lodash";
 import {
   AvatarSkillDepot,
   AvatarSkillDepotExcelConfigData,
   AvatarSkillMap,
-  AvatarTalentMap,
   SkillDepotMap,
-} from "@/types/database";
-import { fetchSkills } from "@/api/database/avatar/skill/skill";
-import { fetchTalents } from "@/api/database/avatar/skill/talent";
-import _ from "lodash";
+} from "@/types/database/avatar/skill";
+import { AvatarTalentMap } from "@/types/database/avatar/talent";
 
 export async function fetchSkillDepot(
   skill?: AvatarSkillMap,
